@@ -1,9 +1,16 @@
-// Configurações
-const ADMIN_PASSWORD = "admin123"; // Senha do proprietário
+// ========== CONFIGURAÇÃO DE API ==========
+// Detectar se está em localhost ou GitHub Pages
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:3001'
+  : 'https://api-agendamentos.onrender.com'; // Será deploy do backend
+
+const ADMIN_PASSWORD = "admin123";
 const SCHEDULES_KEY = "schedules";
 const ADMIN_LOGIN_KEY = "adminLoggedIn";
 const CLIENT_LOGIN_KEY = "clientLoggedIn";
 const CLIENT_PHONE_KEY = "clientPhone";
+
+console.log(`🔧 API URL: ${API_URL}`);
 
 // DOM Elements
 const sidebar = document.getElementById("sidebar");
@@ -46,59 +53,52 @@ function updateAvailableTimes() {
   if (!selectedDate) {
     bookedTimesInfo.textContent = "";
     availableInfo.textContent = "";
-    // Habilitar todos os horários
     Array.from(timeSelect.options).forEach(option => {
-      if (option.value) {
-        option.disabled = false;
-      }
+      if (option.value) option.disabled = false;
     });
     return;
   }
   
-  // Obter todos os agendamentos
-  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
-  
-  // Filtrar agendamentos para a data selecionada
-  const bookedTimesArray = schedules
-    .filter(s => s.date === selectedDate)
-    .map(s => s.time);
-  
-  console.log(`📅 Data: ${selectedDate}`);
-  console.log(`⏰ Horários agendados: ${bookedTimesArray.join(", ") || "Nenhum"}`);
-  
-  // Desabilitar horários já agendados
-  let disabledCount = 0;
-  Array.from(timeSelect.options).forEach(option => {
-    if (option.value) {
-      const isBooked = bookedTimesArray.includes(option.value);
-      option.disabled = isBooked;
-      if (isBooked) {
-        option.textContent = `${option.value} (INDISPONÍVEL)`;
-        disabledCount++;
+  // Buscar agendamentos do backend para a data
+  fetch(`${API_URL}/api/agendamentos/cliente/temp`)
+    .then(r => r.json())
+    .then(schedules => {
+      const bookedTimesArray = schedules
+        .filter(s => s.date === selectedDate)
+        .map(s => s.time);
+      
+      let disabledCount = 0;
+      Array.from(timeSelect.options).forEach(option => {
+        if (option.value) {
+          const isBooked = bookedTimesArray.includes(option.value);
+          option.disabled = isBooked;
+          if (isBooked) {
+            option.textContent = `${option.value} (INDISPONÍVEL)`;
+            disabledCount++;
+          } else {
+            option.textContent = option.value;
+          }
+        }
+      });
+      
+      const totalHours = Array.from(timeSelect.options).filter(o => o.value).length;
+      const availableCount = totalHours - disabledCount;
+      
+      if (disabledCount > 0) {
+        bookedTimesInfo.textContent = `⏳ Horários marcados: ${bookedTimesArray.join(", ")}`;
       } else {
-        // Restaurar texto original
-        const hours = option.value;
-        option.textContent = hours;
+        bookedTimesInfo.textContent = "";
       }
-    }
-  });
-  
-  // Atualizar mensagens informativas
-  const totalHours = Array.from(timeSelect.options).filter(o => o.value).length;
-  const availableCount = totalHours - disabledCount;
-  
-  if (disabledCount > 0) {
-    bookedTimesInfo.textContent = `⏳ Horários marcados: ${bookedTimesArray.join(", ")}`;
-  } else {
-    bookedTimesInfo.textContent = "";
-  }
-  
-  availableInfo.textContent = `✅ ${availableCount} horários disponíveis`;
-  
-  // Limpar seleção anterior se estava bloqueada
-  if (timeSelect.value && bookedTimesArray.includes(timeSelect.value)) {
-    timeSelect.value = "";
-  }
+      
+      availableInfo.textContent = `✅ ${availableCount} horários disponíveis`;
+      
+      if (timeSelect.value && bookedTimesArray.includes(timeSelect.value)) {
+        timeSelect.value = "";
+      }
+    })
+    .catch(e => {
+      console.error("Erro ao atualizar horários:", e);
+    });
 }
 
 // Chamar ao abrir o modal
@@ -140,23 +140,27 @@ function validateClientLogin() {
     return;
   }
   
-  // Verificar se existe algum agendamento com esse telefone
-  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
-  const clientSchedules = schedules.filter(s => s.phone === phone);
-  
-  if (clientSchedules.length === 0) {
-    alert("❌ Nenhum agendamento encontrado com este telefone.\n\nVerifique se digitou corretamente ou agende uma consulta.");
-    return;
-  }
-  
-  console.log(`✅ Cliente autenticado: ${phone}`);
-  console.log(`📊 Agendamentos encontrados: ${clientSchedules.length}`);
-  
-  sessionStorage.setItem(CLIENT_LOGIN_KEY, "true");
-  sessionStorage.setItem(CLIENT_PHONE_KEY, phone);
-  closeClientLoginModal();
-  openClientSchedulesModal();
-  showClientSchedules();
+  fetch(`${API_URL}/api/login/cliente`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone })
+  })
+    .then(r => r.json())
+    .then(data => {
+      if (data.autenticado) {
+        sessionStorage.setItem(CLIENT_LOGIN_KEY, "true");
+        sessionStorage.setItem(CLIENT_PHONE_KEY, phone);
+        closeClientLoginModal();
+        openClientSchedulesModal();
+        showClientSchedules();
+      } else {
+        alert(data.erro || "❌ Nenhum agendamento encontrado");
+      }
+    })
+    .catch(e => {
+      console.error(e);
+      alert("❌ Erro ao conectar com o servidor");
+    });
 }
 
 // Funções do Modal de Visualização de Agendamentos do Cliente
@@ -185,41 +189,43 @@ function showClientSchedules() {
     return;
   }
   
-  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
-  const clientSchedulesList = document.getElementById("clientSchedulesList");
-  
-  // Filtrar agendamentos do cliente
-  const mySchedules = schedules.filter(s => s.phone === clientPhone);
-  
-  console.log(`🔍 Buscando agendamentos para: ${clientPhone}`);
-  console.log(`📊 Encontrados: ${mySchedules.length}`);
-  
-  if (mySchedules.length === 0) {
-    clientSchedulesList.innerHTML = '<p class="no-schedules">Você não possui agendamentos.</p>';
-    return;
-  }
-  
-  clientSchedulesList.innerHTML = "";
-  
-  // Ordenar por data e hora
-  mySchedules.sort((a, b) => {
-    const dateTimeA = new Date(`${a.date}T${a.time}`);
-    const dateTimeB = new Date(`${b.date}T${b.time}`);
-    return dateTimeA - dateTimeB;
-  });
-  
-  mySchedules.forEach(schedule => {
-    const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
-    const item = document.createElement("div");
-    item.className = "schedule-item";
-    item.innerHTML = `
-      <p><strong>Data:</strong> ${formatDate}</p>
-      <p><strong>Horário:</strong> ${schedule.time}</p>
-      <p><strong>Agendado em:</strong> ${schedule.createdAt}</p>
-      <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">Para cancelar, entre em contato conosco.</p>
-    `;
-    clientSchedulesList.appendChild(item);
-  });
+  fetch(`${API_URL}/api/agendamentos/cliente/${clientPhone}`, {
+    method: 'GET'
+  })
+    .then(r => r.json())
+    .then(mySchedules => {
+      const clientSchedulesList = document.getElementById("clientSchedulesList");
+      
+      if (!Array.isArray(mySchedules) || mySchedules.length === 0) {
+        clientSchedulesList.innerHTML = '<p class="no-schedules">Você não possui agendamentos.</p>';
+        return;
+      }
+      
+      clientSchedulesList.innerHTML = "";
+      
+      mySchedules.sort((a, b) => {
+        const dateTimeA = new Date(`${a.date}T${a.time}`);
+        const dateTimeB = new Date(`${b.date}T${b.time}`);
+        return dateTimeA - dateTimeB;
+      });
+      
+      mySchedules.forEach(schedule => {
+        const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
+        const item = document.createElement("div");
+        item.className = "schedule-item";
+        item.innerHTML = `
+          <p><strong>Data:</strong> ${formatDate}</p>
+          <p><strong>Horário:</strong> ${schedule.time}</p>
+          <p><strong>Agendado em:</strong> ${schedule.createdAt}</p>
+          <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">Para cancelar, entre em contato conosco.</p>
+        `;
+        clientSchedulesList.appendChild(item);
+      });
+    })
+    .catch(e => {
+      console.error(e);
+      alert("❌ Erro ao buscar agendamentos");
+    });
 }
 
 // Funções do Modal de Login do Admin
@@ -236,14 +242,26 @@ function closeAdminLoginModal() {
 function validateAdminLogin() {
   const password = document.getElementById("adminPassword").value;
   
-  if (password === ADMIN_PASSWORD) {
-    sessionStorage.setItem(ADMIN_LOGIN_KEY, "true");
-    closeAdminLoginModal();
-    openAdminModal();
-    showAdminSchedules();
-  } else {
-    alert("Senha incorreta!");
-  }
+  fetch(`${API_URL}/api/login/admin`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password })
+  })
+    .then(r => r.json())
+    .then(data => {
+      if (data.autenticado) {
+        sessionStorage.setItem(ADMIN_LOGIN_KEY, "true");
+        closeAdminLoginModal();
+        openAdminModal();
+        showAdminSchedules();
+      } else {
+        alert("❌ Senha incorreta!");
+      }
+    })
+    .catch(e => {
+      console.error(e);
+      alert("❌ Erro ao conectar com o servidor");
+    });
 }
 
 // Funções da Área Administrativa (Admin)
@@ -263,7 +281,7 @@ function logoutAdmin() {
 }
 
 // Confirmar agendamento
-function confirmSchedule() {
+async function confirmSchedule() {
   const name = document.getElementById("clientName").value.trim();
   const email = document.getElementById("clientEmail").value.trim();
   const phone = document.getElementById("clientPhone").value.trim();
@@ -275,52 +293,42 @@ function confirmSchedule() {
     return;
   }
   
-  // Validar email simples
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     alert("Por favor, insira um email válido!");
     return;
   }
   
-  // Verificar se o horário ainda está disponível (double-check)
-  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
-  const isTimeBooked = schedules.some(s => s.date === date && s.time === time);
-  
-  if (isTimeBooked) {
-    alert("⚠️ Desculpe! Este horário foi agendado neste intervalo.\n\nPor favor, escolha outro horário ou data.");
-    updateAvailableTimes();
-    return;
+  try {
+    const response = await fetch(`${API_URL}/api/agendamentos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, date, time })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      // Limpar formulário
+      document.getElementById("clientName").value = "";
+      document.getElementById("clientEmail").value = "";
+      document.getElementById("clientPhone").value = "";
+      document.getElementById("calendarInput").value = "";
+      document.getElementById("timeInput").value = "";
+      
+      closeScheduleModal();
+      const formatDate = new Date(date).toLocaleDateString("pt-BR");
+      alert(`✅ Agendamento realizado com sucesso!\n\n📅 Data: ${formatDate}\n⏰ Horário: ${time}\n👤 Cliente: ${name}`);
+      
+      // Atualizar disponibilidade
+      updateAvailableTimes();
+    } else {
+      alert(`❌ Erro: ${data.erro}`);
+    }
+  } catch (error) {
+    console.error('❌ Erro:', error);
+    alert("❌ Erro ao criar agendamento. Verifique se o backend está rodando.");
   }
-  
-  // Criar agendamento
-  const schedule = {
-    id: Date.now(),
-    name,
-    email,
-    phone,
-    date,
-    time,
-    createdAt: new Date().toLocaleString("pt-BR")
-  };
-  
-  // Guardar no localStorage
-  schedules.push(schedule);
-  localStorage.setItem(SCHEDULES_KEY, JSON.stringify(schedules));
-  
-  // Debug
-  console.log("✅ Agendamento salvo:", schedule);
-  console.log("📋 Total de agendamentos:", schedules.length);
-  console.log("💾 localStorage:", localStorage.getItem(SCHEDULES_KEY));
-  
-  // Limpar formulário
-  document.getElementById("clientName").value = "";
-  document.getElementById("clientEmail").value = "";
-  document.getElementById("clientPhone").value = "";
-  document.getElementById("calendarInput").value = "";
-  document.getElementById("timeInput").value = "";
-  
-  closeScheduleModal();
-  alert("✅ Agendamento realizado com sucesso!\n\n📅 Data: " + new Date(date).toLocaleDateString("pt-BR") + "\n⏰ Horário: " + time + "\n👤 Cliente: " + name);
 }
 
 // Exibir agendamentos na área administrativa (ADMIN APENAS - TODOS os agendamentos)
@@ -332,43 +340,49 @@ function showAdminSchedules() {
     return;
   }
   
-  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
-  const schedulesList = document.getElementById("schedulesList");
-  
-  // Debug
-  console.log("🔍 Admin verificando todos os agendamentos...");
-  console.log("💾 localStorage content:", localStorage.getItem(SCHEDULES_KEY));
-  console.log("📊 Total encontrado:", schedules.length);
-  
-  if (schedules.length === 0) {
-    schedulesList.innerHTML = '<p class="no-schedules">Nenhum agendamento realizado.</p>';
-    return;
-  }
-  
-  schedulesList.innerHTML = "";
-  
-  // Ordenar por data e hora
-  schedules.sort((a, b) => {
-    const dateTimeA = new Date(`${a.date}T${a.time}`);
-    const dateTimeB = new Date(`${b.date}T${b.time}`);
-    return dateTimeA - dateTimeB;
-  });
-  
-  schedules.forEach(schedule => {
-    const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
-    const item = document.createElement("div");
-    item.className = "schedule-item";
-    item.innerHTML = `
-      <p><strong>Cliente:</strong> ${schedule.name}</p>
-      <p><strong>Email:</strong> ${schedule.email}</p>
-      <p><strong>Telefone:</strong> ${schedule.phone}</p>
-      <p><strong>Data:</strong> ${formatDate}</p>
-      <p><strong>Horário:</strong> ${schedule.time}</p>
-      <p><strong>Agendado em:</strong> ${schedule.createdAt}</p>
-      <button class="btn" style="margin-top: 0.5rem; background: #ff6b6b;" onclick="deleteSchedule(${schedule.id})">Remover</button>
-    `;
-    schedulesList.appendChild(item);
-  });
+  fetch(`${API_URL}/api/agendamentos`, {
+    method: 'GET',
+    headers: {
+      'Authorization': ADMIN_PASSWORD
+    }
+  })
+    .then(r => r.json())
+    .then(schedules => {
+      const schedulesList = document.getElementById("schedulesList");
+      
+      if (!Array.isArray(schedules) || schedules.length === 0) {
+        schedulesList.innerHTML = '<p class="no-schedules">Nenhum agendamento realizado.</p>';
+        return;
+      }
+      
+      schedulesList.innerHTML = "";
+      
+      schedules.sort((a, b) => {
+        const dateTimeA = new Date(`${a.date}T${a.time}`);
+        const dateTimeB = new Date(`${b.date}T${b.time}`);
+        return dateTimeA - dateTimeB;
+      });
+      
+      schedules.forEach(schedule => {
+        const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
+        const item = document.createElement("div");
+        item.className = "schedule-item";
+        item.innerHTML = `
+          <p><strong>Cliente:</strong> ${schedule.name}</p>
+          <p><strong>Email:</strong> ${schedule.email}</p>
+          <p><strong>Telefone:</strong> ${schedule.phone}</p>
+          <p><strong>Data:</strong> ${formatDate}</p>
+          <p><strong>Horário:</strong> ${schedule.time}</p>
+          <p><strong>Agendado em:</strong> ${schedule.createdAt}</p>
+          <button class="btn" style="margin-top: 0.5rem; background: #ff6b6b;" onclick="deleteSchedule('${schedule.id}')">Remover</button>
+        `;
+        schedulesList.appendChild(item);
+      });
+    })
+    .catch(e => {
+      console.error(e);
+      alert("❌ Erro ao buscar agendamentos");
+    });
 }
 
 // Remover agendamento específico
@@ -377,10 +391,21 @@ function deleteSchedule(id) {
     return;
   }
   
-  let schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
-  schedules = schedules.filter(s => s.id !== id);
-  localStorage.setItem(SCHEDULES_KEY, JSON.stringify(schedules));
-  showSchedules();
+  fetch(`${API_URL}/api/agendamentos/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': ADMIN_PASSWORD
+    }
+  })
+    .then(r => r.json())
+    .then(data => {
+      alert("✅ Agendamento deletado!");
+      showAdminSchedules();
+    })
+    .catch(e => {
+      console.error(e);
+      alert("❌ Erro ao deletar agendamento");
+    });
 }
 
 // Limpar toda a agenda
@@ -389,9 +414,21 @@ function clearAllSchedules() {
     return;
   }
   
-  localStorage.removeItem(SCHEDULES_KEY);
-  showSchedules();
-  alert("Agenda limpa com sucesso!");
+  fetch(`${API_URL}/api/agendamentos`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': ADMIN_PASSWORD
+    }
+  })
+    .then(r => r.json())
+    .then(data => {
+      alert(`✅ ${data.deletados} agendamentos foram deletados!`);
+      showAdminSchedules();
+    })
+    .catch(e => {
+      console.error(e);
+      alert("❌ Erro ao limpar agendamentos");
+    });
 }
 
 // Fechar todos os modais
@@ -423,10 +460,16 @@ document.querySelectorAll(".modal-content").forEach(modal => {
 });
 
 // ===== Funções de Debug =====
-// Verificar localStorage via console
+// Verificar agendamentos via API
 function checkSchedules() {
-  const data = localStorage.getItem("schedules");
-  console.log("📊 AGENDAMENTOS SALVOS:");
+  console.log("🔍 Verificando agendamentos no backend...");
+  fetch(`${API_URL}/api/agendamentos`, {
+    headers: { 'Authorization': ADMIN_PASSWORD }
+  })
+    .then(r => r.json())
+    .then(data => console.log("📊 Agendamentos:", data))
+    .catch(e => console.error("❌ Erro:", e));
+}
   console.log(data ? JSON.parse(data) : "❌ Nenhum agendamento encontrado");
   return data ? JSON.parse(data) : [];
 }
