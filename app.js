@@ -111,6 +111,11 @@ function confirmSchedule() {
   schedules.push(schedule);
   localStorage.setItem(SCHEDULES_KEY, JSON.stringify(schedules));
   
+  // Debug
+  console.log("✅ Agendamento salvo:", schedule);
+  console.log("📋 Total de agendamentos:", schedules.length);
+  console.log("💾 localStorage:", localStorage.getItem(SCHEDULES_KEY));
+  
   // Limpar formulário
   document.getElementById("clientName").value = "";
   document.getElementById("clientEmail").value = "";
@@ -119,7 +124,7 @@ function confirmSchedule() {
   document.getElementById("timeInput").value = "";
   
   closeScheduleModal();
-  alert("Agendamento realizado com sucesso! Você receberá uma confirmação por email.");
+  alert("✅ Agendamento realizado com sucesso!\n\nDados salvos: " + name);
 }
 
 // Exibir agendamentos na área administrativa
@@ -133,6 +138,11 @@ function showSchedules() {
   
   const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
   const schedulesList = document.getElementById("schedulesList");
+  
+  // Debug
+  console.log("🔍 Verificando agendamentos...");
+  console.log("💾 localStorage content:", localStorage.getItem(SCHEDULES_KEY));
+  console.log("📊 Total encontrado:", schedules.length);
   
   if (schedules.length === 0) {
     schedulesList.innerHTML = '<p class="no-schedules">Nenhum agendamento realizado.</p>';
@@ -213,3 +223,40 @@ document.querySelectorAll(".modal-content").forEach(modal => {
     e.stopPropagation();
   });
 });
+
+// ===== Funções de Debug =====
+// Verificar localStorage via console
+function checkSchedules() {
+  const data = localStorage.getItem("schedules");
+  console.log("📊 AGENDAMENTOS SALVOS:");
+  console.log(data ? JSON.parse(data) : "❌ Nenhum agendamento encontrado");
+  return data ? JSON.parse(data) : [];
+}
+
+// Teste rápido (adiciona agendamento fake)
+function testSchedule() {
+  const fakeSchedule = {
+    id: Date.now(),
+    name: "TESTE - " + new Date().getTime(),
+    email: "teste@example.com",
+    phone: "(11) 99999-9999",
+    date: new Date().toISOString().split("T")[0],
+    time: "10:00",
+    createdAt: new Date().toLocaleString("pt-BR")
+  };
+  
+  let schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
+  schedules.push(fakeSchedule);
+  localStorage.setItem(SCHEDULES_KEY, JSON.stringify(schedules));
+  
+  console.log("✅ Agendamento de teste criado:");
+  checkSchedules();
+}
+
+// Limpar dados de teste (remover tudo)
+function clearData() {
+  if (confirm("⚠️ Limpar TODOS os agendamentos?")) {
+    localStorage.removeItem(SCHEDULES_KEY);
+    console.log("🗑️ localStorage limpo");
+  }
+}
