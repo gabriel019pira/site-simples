@@ -8,16 +8,25 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="container">
+    <div class="container-header">
       <a class="logo" href="#">Franciele Silva</a>
-      <nav class="menu">
-        <a href="#sobre">Sobre</a>
-        <a href="#especialidades">Especialidades</a>
-        <a href="#atendimento">Atendimento</a>
-        <a href="#contato">Contato</a>
-      </nav>
+      <button class="menu-toggle" id="menuToggle">☰</button>
     </div>
   </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3>Menu</h3>
+      <button class="close-btn" id="closeSidebar">✕</button>
+    </div>
+    <nav class="sidebar-menu">
+      <a href="#sobre" class="sidebar-link" onclick="closeSidebarOnClick()">Sobre</a>
+      <a href="#especialidades" class="sidebar-link" onclick="closeSidebarOnClick()">Especialidades</a>
+      <a href="#atendimento" class="sidebar-link" onclick="closeSidebarOnClick()">Atendimento</a>
+      <a href="#contato" class="sidebar-link" onclick="closeSidebarOnClick()">Contato</a>
+      <button class="btn-admin" id="adminBtn" onclick="openLoginModal()">Área do Proprietário</button>
+    </nav>
+  </aside>
 
   <main>
     <section class="hero">
@@ -26,7 +35,7 @@
     <section class="intro container">
       <h2>Terapia online com acolhimento e segurança</h2>
       <p>Agende sua sessão com a psicóloga Franciele Silva. Atendimento humanizado e especial para ansiedade, depressão e autoconhecimento.</p>
-      <a class="btn" href="#contato">Agendar Consulta</a>
+      <a class="btn" href="#" onclick="openScheduleModal()">Agendar Consulta</a>
     </section>
 
     <section id="sobre" class="sobre container">
@@ -60,14 +69,104 @@
 
     <section id="contato" class="contato container">
       <h2>Contato</h2>
-      <p>📩 Contato: 📞 <a href="https://wa.me/5519997505260" target="_blank">(19) 99750-5260</a> | 📧 <a href="mailto:franciele.psirh@gmail.com">francielesilva.psirh@gmail.com</a> | 📱 Instagram: <a href="https://instagram.com/francielesilva_oficial" target="_blank">@francielesilva_oficial</a></p>
+      <div class="contact-info">
+        <p>📧 <a href="mailto:franciele.psirh@gmail.com">francielesilva.psirh@gmail.com</a></p>
+        <p>📞 <a href="https://wa.me/5519997505260" target="_blank">(19) 99750-5260</a></p>
+        <p>📱 Instagram: <a href="https://instagram.com/francielesilva_oficial" target="_blank">@francielesilva_oficial</a></p>
+      </div>
     </section>
   </main>
+
+  <!-- Modal de Agendamento -->
+  <div class="modal" id="scheduleModal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeScheduleModal()">✕</button>
+      <h2>Agendar Consulta</h2>
+      <div class="schedule-form">
+        <div class="form-group">
+          <label for="clientName">Seu Nome:</label>
+          <input type="text" id="clientName" placeholder="Digite seu nome">
+        </div>
+        <div class="form-group">
+          <label for="clientEmail">Email:</label>
+          <input type="email" id="clientEmail" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+          <label for="clientPhone">Telefone/WhatsApp:</label>
+          <input type="tel" id="clientPhone" placeholder="(19) 99750-5260">
+        </div>
+        <div class="form-group">
+          <label for="calendarInput">Selecione a Data:</label>
+          <input type="date" id="calendarInput" min="">
+        </div>
+        <div class="form-group">
+          <label for="timeInput">Selecione o Horário:</label>
+          <select id="timeInput">
+            <option value="">-- Escolha um horário --</option>
+            <optgroup label="Manhã (08:00 - 11:00)">
+              <option value="08:00">08:00</option>
+              <option value="08:30">08:30</option>
+              <option value="09:00">09:00</option>
+              <option value="09:30">09:30</option>
+              <option value="10:00">10:00</option>
+              <option value="10:30">10:30</option>
+            </optgroup>
+            <optgroup label="Tarde (13:00 - 18:00)">
+              <option value="13:00">13:00</option>
+              <option value="13:30">13:30</option>
+              <option value="14:00">14:00</option>
+              <option value="14:30">14:30</option>
+              <option value="15:00">15:00</option>
+              <option value="15:30">15:30</option>
+              <option value="16:00">16:00</option>
+              <option value="16:30">16:30</option>
+              <option value="17:00">17:00</option>
+              <option value="17:30">17:30</option>
+            </optgroup>
+          </select>
+        </div>
+        <button class="btn" onclick="confirmSchedule()">Agendar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Login do Proprietário -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeLoginModal()">✕</button>
+      <h2>Área do Proprietário</h2>
+      <div class="login-form">
+        <div class="form-group">
+          <label for="adminPassword">Senha:</label>
+          <input type="password" id="adminPassword" placeholder="Digite a senha">
+        </div>
+        <button class="btn" onclick="validateLogin()">Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Área Administrativa -->
+  <div class="modal" id="adminModal">
+    <div class="modal-content admin-modal">
+      <button class="close-modal" onclick="closeAdminModal()">✕</button>
+      <h2>Agenda de Consultas</h2>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+      <div class="schedules-list" id="schedulesList">
+        <p class="no-schedules">Nenhum agendamento realizado.</p>
+      </div>
+      <button class="btn-delete-all" onclick="clearAllSchedules()">Limpar Agenda</button>
+    </div>
+  </div>
+
+  <!-- Overlay para modais -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
 
   <footer class="footer">
     <div class="container">
       <p> 2026 Franciele Silva | Psicóloga Online</p>
     </div>
   </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
