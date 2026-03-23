@@ -23,6 +23,17 @@ function toggleSidebar() {
   document.querySelector(".topbar").classList.toggle("sidebar-collapsed");
 }
 
+// Função para limpar cache
+function clearCache() {
+  // Limpar localStorage
+  localStorage.clear();
+  // Limpar sessionStorage
+  sessionStorage.clear();
+  // Recarregar página
+  alert("✅ Cache limpo com sucesso! A página será recarregada.");
+  location.reload();
+}
+
 // Event Listeners - Menu lateral agora é fixo
 
 // Função para atualizar horários disponíveis
