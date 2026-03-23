@@ -1,0 +1,27 @@
+﻿* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Inter", "Segoe UI", sans-serif; color: #222; line-height: 1.5; background: #f9fafb; }
+.container { width: min(1140px, 92%); margin: 0 auto; }
+.topbar { background: #fce4ec; color: #c2185b; padding: 0.8rem 0; position: sticky; top: 0; z-index: 10; }
+.topbar .logo { font-weight: 700; font-size: 2rem; text-decoration: none; color: #c2185b; }
+.menu { display: flex; gap: 0.8rem; }
+.menu a { text-decoration: none; color: #c2185b; font-size: 0.95rem; }
+.hero { background: url('foto de fundo.jpg') center/cover no-repeat; color: #222; padding: 150px 0; }
+.intro { padding: 50px 0; text-align: left; }
+.intro h2 { color: #c2185b; margin-bottom: 0.8rem; font-size: 1.8rem; }
+.intro p { max-width: 600px; margin: 0 0 1.2rem 0; font-size: 1rem; color: #222; }
+.hero-text h1 { font-size: clamp(1.8rem, 3vw, 3rem); margin-bottom: 0.8rem; }
+.hero-text p { max-width: 600px; margin-bottom: 1.2rem; }
+.btn { background: #e91e63; color: #fff; padding: 0.8rem 1.2rem; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600; }
+.sobre, .especialidades, .atendimento, .contato { padding: 70px 0; }
+h2 { color: #e91e63; margin-bottom: 0.8rem; }
+.especialidades ul { display: grid; gap: 0.7rem; list-style: none; }
+.especialidades li { background: #fff; padding: 0.7rem 1rem; border-radius: 10px; border: 1px solid #eaeaea; }
+.cards { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
+.cards article { background: #fff; border: 1px solid #e1e1e1; border-radius: 10px; flex: 1; min-width: 170px; text-align: center; padding: 1rem; }
+.cards strong { font-size: 2rem; color: #e91e63; display: block; margin-bottom: 0.4rem; }
+.footer { text-align: center; background: #f1f5f6; padding: 0.8rem 0; font-size: 0.90rem; color: #555; }
+.profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto; }
+@media (max-width: 860px) {
+  .menu { flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+  .cards { flex-direction: column; }
+}
