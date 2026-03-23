@@ -1,13 +1,17 @@
 // Configurações
 const ADMIN_PASSWORD = "admin123"; // Senha do proprietário
 const SCHEDULES_KEY = "schedules";
-const LOGIN_KEY = "adminLoggedIn";
+const ADMIN_LOGIN_KEY = "adminLoggedIn";
+const CLIENT_LOGIN_KEY = "clientLoggedIn";
+const CLIENT_PHONE_KEY = "clientPhone";
 
 // DOM Elements
 const sidebar = document.getElementById("sidebar");
 const sidebarToggle = document.getElementById("sidebarToggle");
 const scheduleModal = document.getElementById("scheduleModal");
-const loginModal = document.getElementById("loginModal");
+const clientLoginModal = document.getElementById("clientLoginModal");
+const adminLoginModal = document.getElementById("adminLoginModal");
+const clientSchedulesModal = document.getElementById("clientSchedulesModal");
 const adminModal = document.getElementById("adminModal");
 const modalOverlay = document.getElementById("modalOverlay");
 
@@ -106,31 +110,132 @@ function closeScheduleModal() {
   scheduleModal.classList.remove("active");
 }
 
-// Funções do Modal de Login
-function openLoginModal() {
-  loginModal.classList.add("active");
+// Funções do Modal de Login do Cliente
+function openClientLoginModal() {
+  clientLoginModal.classList.add("active");
+  modalOverlay.classList.add("active");
+  document.getElementById("clientPhoneLogin").value = "";
+}
+
+function closeClientLoginModal() {
+  clientLoginModal.classList.remove("active");
+}
+
+function validateClientLogin() {
+  const phone = document.getElementById("clientPhoneLogin").value.trim();
+  
+  if (!phone) {
+    alert("Por favor, digite seu telefone!");
+    return;
+  }
+  
+  // Verificar se existe algum agendamento com esse telefone
+  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
+  const clientSchedules = schedules.filter(s => s.phone === phone);
+  
+  if (clientSchedules.length === 0) {
+    alert("❌ Nenhum agendamento encontrado com este telefone.\n\nVerifique se digitou corretamente ou agende uma consulta.");
+    return;
+  }
+  
+  console.log(`✅ Cliente autenticado: ${phone}`);
+  console.log(`📊 Agendamentos encontrados: ${clientSchedules.length}`);
+  
+  sessionStorage.setItem(CLIENT_LOGIN_KEY, "true");
+  sessionStorage.setItem(CLIENT_PHONE_KEY, phone);
+  closeClientLoginModal();
+  openClientSchedulesModal();
+  showClientSchedules();
+}
+
+// Funções do Modal de Visualização de Agendamentos do Cliente
+function openClientSchedulesModal() {
+  clientSchedulesModal.classList.add("active");
+  modalOverlay.classList.add("active");
+}
+
+function closeClientSchedulesModal() {
+  clientSchedulesModal.classList.remove("active");
+}
+
+function logoutClient() {
+  sessionStorage.removeItem(CLIENT_LOGIN_KEY);
+  sessionStorage.removeItem(CLIENT_PHONE_KEY);
+  closeClientSchedulesModal();
+}
+
+// Função para exibir agendamentos do cliente
+function showClientSchedules() {
+  const isLoggedIn = sessionStorage.getItem(CLIENT_LOGIN_KEY);
+  const clientPhone = sessionStorage.getItem(CLIENT_PHONE_KEY);
+  
+  if (!isLoggedIn || !clientPhone) {
+    alert("Acesso negado!");
+    return;
+  }
+  
+  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
+  const clientSchedulesList = document.getElementById("clientSchedulesList");
+  
+  // Filtrar agendamentos do cliente
+  const mySchedules = schedules.filter(s => s.phone === clientPhone);
+  
+  console.log(`🔍 Buscando agendamentos para: ${clientPhone}`);
+  console.log(`📊 Encontrados: ${mySchedules.length}`);
+  
+  if (mySchedules.length === 0) {
+    clientSchedulesList.innerHTML = '<p class="no-schedules">Você não possui agendamentos.</p>';
+    return;
+  }
+  
+  clientSchedulesList.innerHTML = "";
+  
+  // Ordenar por data e hora
+  mySchedules.sort((a, b) => {
+    const dateTimeA = new Date(`${a.date}T${a.time}`);
+    const dateTimeB = new Date(`${b.date}T${b.time}`);
+    return dateTimeA - dateTimeB;
+  });
+  
+  mySchedules.forEach(schedule => {
+    const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
+    const item = document.createElement("div");
+    item.className = "schedule-item";
+    item.innerHTML = `
+      <p><strong>Data:</strong> ${formatDate}</p>
+      <p><strong>Horário:</strong> ${schedule.time}</p>
+      <p><strong>Agendado em:</strong> ${schedule.createdAt}</p>
+      <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">Para cancelar, entre em contato conosco.</p>
+    `;
+    clientSchedulesList.appendChild(item);
+  });
+}
+
+// Funções do Modal de Login do Admin
+function openAdminLoginModal() {
+  adminLoginModal.classList.add("active");
   modalOverlay.classList.add("active");
   document.getElementById("adminPassword").value = "";
 }
 
-function closeLoginModal() {
-  loginModal.classList.remove("active");
+function closeAdminLoginModal() {
+  adminLoginModal.classList.remove("active");
 }
 
-function validateLogin() {
+function validateAdminLogin() {
   const password = document.getElementById("adminPassword").value;
   
   if (password === ADMIN_PASSWORD) {
-    sessionStorage.setItem(LOGIN_KEY, "true");
-    closeLoginModal();
+    sessionStorage.setItem(ADMIN_LOGIN_KEY, "true");
+    closeAdminLoginModal();
     openAdminModal();
-    showSchedules();
+    showAdminSchedules();
   } else {
     alert("Senha incorreta!");
   }
 }
 
-// Funções da Área Administrativa
+// Funções da Área Administrativa (Admin)
 function openAdminModal() {
   adminModal.classList.add("active");
   modalOverlay.classList.add("active");
@@ -141,8 +246,8 @@ function closeAdminModal() {
   closeAllModals();
 }
 
-function logout() {
-  sessionStorage.removeItem(LOGIN_KEY);
+function logoutAdmin() {
+  sessionStorage.removeItem(ADMIN_LOGIN_KEY);
   closeAdminModal();
 }
 
@@ -207,9 +312,9 @@ function confirmSchedule() {
   alert("✅ Agendamento realizado com sucesso!\n\n📅 Data: " + new Date(date).toLocaleDateString("pt-BR") + "\n⏰ Horário: " + time + "\n👤 Cliente: " + name);
 }
 
-// Exibir agendamentos na área administrativa
-function showSchedules() {
-  const isLoggedIn = sessionStorage.getItem(LOGIN_KEY);
+// Exibir agendamentos na área administrativa (ADMIN APENAS - TODOS os agendamentos)
+function showAdminSchedules() {
+  const isLoggedIn = sessionStorage.getItem(ADMIN_LOGIN_KEY);
   
   if (!isLoggedIn) {
     alert("Acesso negado!");
@@ -220,7 +325,7 @@ function showSchedules() {
   const schedulesList = document.getElementById("schedulesList");
   
   // Debug
-  console.log("🔍 Verificando agendamentos...");
+  console.log("🔍 Admin verificando todos os agendamentos...");
   console.log("💾 localStorage content:", localStorage.getItem(SCHEDULES_KEY));
   console.log("📊 Total encontrado:", schedules.length);
   
@@ -281,7 +386,9 @@ function clearAllSchedules() {
 // Fechar todos os modais
 function closeAllModals() {
   scheduleModal.classList.remove("active");
-  loginModal.classList.remove("active");
+  clientLoginModal.classList.remove("active");
+  adminLoginModal.classList.remove("active");
+  clientSchedulesModal.classList.remove("active");
   adminModal.classList.remove("active");
   modalOverlay.classList.remove("active");
   sidebar.classList.remove("active");
