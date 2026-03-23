@@ -9,22 +9,23 @@
 <body>
   <header class="topbar">
     <div class="container-header">
-      <a class="logo" href="#">Franciele Silva</a>
-      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div class="logo-section">
+        <a class="logo" href="#">Franciele Silva</a>
+        <p class="crp">CRP: 12/34567</p>
+      </div>
     </div>
   </header>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <h3>Menu</h3>
-      <button class="close-btn" id="closeSidebar">✕</button>
+      <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Recolher/Expandir">‹</button>
     </div>
     <nav class="sidebar-menu">
-      <a href="#sobre" class="sidebar-link" onclick="closeSidebarOnClick()">Sobre</a>
-      <a href="#especialidades" class="sidebar-link" onclick="closeSidebarOnClick()">Especialidades</a>
-      <a href="#atendimento" class="sidebar-link" onclick="closeSidebarOnClick()">Atendimento</a>
-      <a href="#contato" class="sidebar-link" onclick="closeSidebarOnClick()">Contato</a>
-      <button class="btn-admin" id="adminBtn" onclick="openLoginModal()">Área do Proprietário</button>
+      <a href="#sobre" class="sidebar-link">Sobre</a>
+      <a href="#especialidades" class="sidebar-link">Especialidades</a>
+      <a href="#atendimento" class="sidebar-link">Atendimento</a>
+      <a href="#contato" class="sidebar-link">Contato</a>
     </nav>
   </aside>
 
@@ -74,6 +75,7 @@
         <p>📞 <a href="https://wa.me/5519997505260" target="_blank">(19) 99750-5260</a></p>
         <p>📱 Instagram: <a href="https://instagram.com/francielesilva_oficial" target="_blank">@francielesilva_oficial</a></p>
       </div>
+      <button class="btn-admin btn-admin-footer" id="adminBtn" onclick="openLoginModal()">Área do Proprietário</button>
     </section>
   </main>
 
