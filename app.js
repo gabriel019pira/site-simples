@@ -21,7 +21,72 @@ function toggleSidebar() {
 
 // Event Listeners - Menu lateral agora é fixo
 
-// Funções do Modal de Agendamento
+// Função para atualizar horários disponíveis
+function updateAvailableTimes() {
+  const selectedDate = document.getElementById("calendarInput").value;
+  const timeSelect = document.getElementById("timeInput");
+  const bookedTimesInfo = document.getElementById("bookedTimes");
+  const availableInfo = document.getElementById("availableInfo");
+  
+  if (!selectedDate) {
+    bookedTimesInfo.textContent = "";
+    availableInfo.textContent = "";
+    // Habilitar todos os horários
+    Array.from(timeSelect.options).forEach(option => {
+      if (option.value) {
+        option.disabled = false;
+      }
+    });
+    return;
+  }
+  
+  // Obter todos os agendamentos
+  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
+  
+  // Filtrar agendamentos para a data selecionada
+  const bookedTimesArray = schedules
+    .filter(s => s.date === selectedDate)
+    .map(s => s.time);
+  
+  console.log(`📅 Data: ${selectedDate}`);
+  console.log(`⏰ Horários agendados: ${bookedTimesArray.join(", ") || "Nenhum"}`);
+  
+  // Desabilitar horários já agendados
+  let disabledCount = 0;
+  Array.from(timeSelect.options).forEach(option => {
+    if (option.value) {
+      const isBooked = bookedTimesArray.includes(option.value);
+      option.disabled = isBooked;
+      if (isBooked) {
+        option.textContent = `${option.value} (INDISPONÍVEL)`;
+        disabledCount++;
+      } else {
+        // Restaurar texto original
+        const hours = option.value;
+        option.textContent = hours;
+      }
+    }
+  });
+  
+  // Atualizar mensagens informativas
+  const totalHours = Array.from(timeSelect.options).filter(o => o.value).length;
+  const availableCount = totalHours - disabledCount;
+  
+  if (disabledCount > 0) {
+    bookedTimesInfo.textContent = `⏳ Horários marcados: ${bookedTimesArray.join(", ")}`;
+  } else {
+    bookedTimesInfo.textContent = "";
+  }
+  
+  availableInfo.textContent = `✅ ${availableCount} horários disponíveis`;
+  
+  // Limpar seleção anterior se estava bloqueada
+  if (timeSelect.value && bookedTimesArray.includes(timeSelect.value)) {
+    timeSelect.value = "";
+  }
+}
+
+// Chamar ao abrir o modal
 function openScheduleModal() {
   scheduleModal.classList.add("active");
   modalOverlay.classList.add("active");
@@ -29,6 +94,12 @@ function openScheduleModal() {
   // Definir data mínima como hoje
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("calendarInput").min = today;
+  document.getElementById("calendarInput").value = today; // Pré-selecionar hoje
+  
+  // Atualizar horários disponíveis para hoje
+  setTimeout(() => {
+    updateAvailableTimes();
+  }, 100);
 }
 
 function closeScheduleModal() {
@@ -95,6 +166,16 @@ function confirmSchedule() {
     return;
   }
   
+  // Verificar se o horário ainda está disponível (double-check)
+  const schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
+  const isTimeBooked = schedules.some(s => s.date === date && s.time === time);
+  
+  if (isTimeBooked) {
+    alert("⚠️ Desculpe! Este horário foi agendado neste intervalo.\n\nPor favor, escolha outro horário ou data.");
+    updateAvailableTimes();
+    return;
+  }
+  
   // Criar agendamento
   const schedule = {
     id: Date.now(),
@@ -107,7 +188,6 @@ function confirmSchedule() {
   };
   
   // Guardar no localStorage
-  let schedules = JSON.parse(localStorage.getItem(SCHEDULES_KEY)) || [];
   schedules.push(schedule);
   localStorage.setItem(SCHEDULES_KEY, JSON.stringify(schedules));
   
@@ -124,7 +204,7 @@ function confirmSchedule() {
   document.getElementById("timeInput").value = "";
   
   closeScheduleModal();
-  alert("✅ Agendamento realizado com sucesso!\n\nDados salvos: " + name);
+  alert("✅ Agendamento realizado com sucesso!\n\n📅 Data: " + new Date(date).toLocaleDateString("pt-BR") + "\n⏰ Horário: " + time + "\n👤 Cliente: " + name);
 }
 
 // Exibir agendamentos na área administrativa

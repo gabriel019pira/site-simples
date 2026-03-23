@@ -99,7 +99,8 @@
         </div>
         <div class="form-group">
           <label for="calendarInput">Selecione a Data:</label>
-          <input type="date" id="calendarInput" min="">
+          <input type="date" id="calendarInput" min="" onchange="updateAvailableTimes()">
+          <small id="availableInfo" style="color: #666; margin-top: 0.3rem; font-size: 0.85rem;"></small>
         </div>
         <div class="form-group">
           <label for="timeInput">Selecione o Horário:</label>
@@ -126,6 +127,7 @@
               <option value="17:30">17:30</option>
             </optgroup>
           </select>
+          <small id="bookedTimes" style="color: #e91e63; margin-top: 0.3rem; font-size: 0.85rem;"></small>
         </div>
         <button class="btn" onclick="confirmSchedule()">Agendar</button>
       </div>
