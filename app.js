@@ -1,6 +1,9 @@
 // ========== CONFIGURAÇÃO DE API ==========
 // Detectar ambiente e URL da API
-const API_URL = window.location.hostname === 'localhost' 
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const isFileProtocol = window.location.protocol === 'file:';
+
+const API_URL = isLocalhost || isFileProtocol
   ? 'http://localhost:3001'
   : 'https://site-simples-backend.onrender.com'; // Altere para seu URL do Render
 
