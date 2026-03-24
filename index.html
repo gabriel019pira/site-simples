@@ -273,20 +273,11 @@ function closeAllModals() {
 }
 
 function openScheduleModal() {
-  console.log("🔵 openScheduleModal chamado");
   const m = el("scheduleModal");
   const o = el("modalOverlay");
-  console.log("Modal:", m, "Overlay:", o);
-  if (!m || !o) {
-    console.error("❌ Modal ou Overlay não encontrado!");
-    return;
-  }
+  if (!m || !o) return;
   m.classList.add("active");
   o.classList.add("active");
-  console.log("✅ Modal aberto, classes adicionadas");
-  console.log("Modal display:", window.getComputedStyle(m).display);
-  console.log("Overlay display:", window.getComputedStyle(o).display);
-  console.log("Modal classes:", m.className);
   const today = new Date().toISOString().split("T")[0];
   const cal = el("calendarInput");
   if (cal) {
@@ -297,31 +288,22 @@ function openScheduleModal() {
 }
 
 function closeScheduleModal() {
-  console.log("🔴 closeScheduleModal chamado");
   el("scheduleModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
-  console.log("✅ Schedule Modal fechado");
 }
 
 function openClientLoginModal() {
-  console.log("🔵 openClientLoginModal chamado");
   const m = el("clientLoginModal");
   const o = el("modalOverlay");
-  console.log("Modal:", m, "Overlay:", o);
   if (m && o) {
     m.classList.add("active");
     o.classList.add("active");
-    console.log("✅ Modal Cliente aberto");
-  } else {
-    console.error("❌ Modal ou Overlay não encontrado!");
   }
 }
 
 function closeClientLoginModal() {
-  console.log("🔴 closeClientLoginModal chamado");
   el("clientLoginModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
-  console.log("✅ Client Login Modal fechado");
 }
 
 function openClientSchedulesModal() {
@@ -334,31 +316,22 @@ function openClientSchedulesModal() {
 }
 
 function closeClientSchedulesModal() {
-  console.log("🔴 closeClientSchedulesModal chamado");
   el("clientSchedulesModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
-  console.log("✅ Client Schedules Modal fechado");
 }
 
 function openAdminLoginModal() {
-  console.log("🔵 openAdminLoginModal chamado");
   const m = el("adminLoginModal");
   const o = el("modalOverlay");
-  console.log("Modal:", m, "Overlay:", o);
   if (m && o) {
     m.classList.add("active");
     o.classList.add("active");
-    console.log("✅ Modal Admin aberto");
-  } else {
-    console.error("❌ Modal ou Overlay não encontrado!");
   }
 }
 
 function closeAdminLoginModal() {
-  console.log("🔴 closeAdminLoginModal chamado");
   el("adminLoginModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
-  console.log("✅ Admin Login Modal fechado");
 }
 
 function openAdminModal() {
@@ -371,10 +344,8 @@ function openAdminModal() {
 }
 
 function closeAdminModal() {
-  console.log("🔴 closeAdminModal chamado");
   el("adminModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
-  console.log("✅ Admin Schedule Modal fechado");
 }
 
 // ========== BOOKING FUNCTIONS ==========
@@ -589,36 +560,19 @@ async function clearAllSchedules() {
 }
 
 // ========== EVENT LISTENERS ==========
-console.log("📍 Configurando event listeners...");
-
-el("sidebarToggle")?.addEventListener("click", () => {
-  console.log("📌 Click: Sidebar Toggle");
-  toggleSidebar();
-});
-el("clearCacheBtn")?.addEventListener("click", () => {
-  console.log("📌 Click: Clear Cache");
-  clearCache();
-});
-el("scheduleBtn")?.addEventListener("click", () => {
-  console.log("📌 Click: Schedule Button");
-  openScheduleModal();
-});
+el("sidebarToggle")?.addEventListener("click", toggleSidebar);
+el("clearCacheBtn")?.addEventListener("click", clearCache);
+el("scheduleBtn")?.addEventListener("click", openScheduleModal);
 el("closeScheduleBtn")?.addEventListener("click", closeScheduleModal);
 el("confirmScheduleBtn")?.addEventListener("click", confirmSchedule);
 
-el("clientBtn")?.addEventListener("click", () => {
-  console.log("📌 Click: Client Button");
-  openClientLoginModal();
-});
+el("clientBtn")?.addEventListener("click", openClientLoginModal);
 el("closeClientLoginBtn")?.addEventListener("click", closeClientLoginModal);
 el("validateClientBtn")?.addEventListener("click", validateClientLogin);
 el("closeClientSchedulesBtn")?.addEventListener("click", closeClientSchedulesModal);
 el("logoutClientBtn")?.addEventListener("click", logoutClient);
 
-el("adminBtn")?.addEventListener("click", () => {
-  console.log("📌 Click: Admin Button");
-  openAdminLoginModal();
-});
+el("adminBtn")?.addEventListener("click", openAdminLoginModal);
 el("closeAdminLoginBtn")?.addEventListener("click", closeAdminLoginModal);
 el("validateAdminBtn")?.addEventListener("click", validateAdminLogin);
 el("closeAdminBtn")?.addEventListener("click", closeAdminModal);
