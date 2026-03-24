@@ -206,39 +206,59 @@
   </footer>
 
   <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <script>
 // ========== VARIÁVEIS GLOBAIS ==========
 let db = null;
+let isReady = false;
 const ADMIN_PASSWORD = "admin123";
 
-// Inicializar Supabase
-(async function initSupabaseAsync() {
-  if (typeof supabase === 'undefined') {
-    await new Promise(resolve => {
-      const checkSupabase = setInterval(() => {
-        if (typeof supabase !== 'undefined') {
-          clearInterval(checkSupabase);
-          resolve();
-        }
-      }, 100);
-      setTimeout(() => clearInterval(checkSupabase), 5000);
-    });
-  }
+// Inicializar Supabase corretamente
+async function initSupabase() {
   try {
+    // Aguardar Supabase carregar
+    let attempts = 0;
+    while (typeof supabase === 'undefined' && attempts < 50) {
+      await new Promise(r => setTimeout(r, 100));
+      attempts++;
+    }
+    
+    if (typeof supabase === 'undefined') {
+      throw new Error("Supabase CDN não carregou");
+    }
+    
     const SUPABASE_URL = "https://dpobhypdzgorabjlkppv.supabase.co";
     const SUPABASE_KEY = "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs";
     db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log("✅ Supabase inicializado!");
+    isReady = true;
+    console.log("✅ Supabase pronto!");
   } catch (e) {
     console.error("❌ Erro ao inicializar Supabase:", e);
+    db = null;
+    isReady = false;
   }
-})();
+}
+
+// Iniciar imediatamente
+initSupabase();
 
 // ========== FUNÇÕES AUXILIARES ==========
 function getElement(id) {
   return document.getElementById(id);
+}
+
+// Aguardar Supabase estar pronto
+async function waitForSupabase() {
+  let attempts = 0;
+  while (!isReady && attempts < 30) {
+    await new Promise(r => setTimeout(r, 100));
+    attempts++;
+  }
+  if (!isReady || !db) {
+    throw new Error("Supabase não inicializou corretamente");
+  }
+  return db;
 }
 
 function toggleSidebar() {
@@ -362,8 +382,8 @@ function closeAdminModal() {
 // ========== HORÁRIOS ==========
 async function getBookedTimes(date) {
   try {
-    if (!db) return [];
-    const { data, error } = await db.from("agendamentos").select("time").eq("date", date);
+    const database = await waitForSupabase();
+    const { data, error } = await database.from("agendamentos").select("time").eq("date", date);
     if (error) {
       console.error("Erro ao buscar horários:", error);
       return [];
@@ -432,12 +452,13 @@ function logoutClient() {
 
 async function showClientSchedules() {
   const phone = sessionStorage.getItem("clientPhone");
-  if (!phone || !db) {
+  if (!phone) {
     alert("Acesso negado!");
     return;
   }
   try {
-    const { data, error } = await db.from("agendamentos").select("*").eq("phone", phone).order("date", { ascending: true });
+    const database = await waitForSupabase();
+    const { data, error } = await database.from("agendamentos").select("*").eq("phone", phone).order("date", { ascending: true });
     if (error) throw error;
     const list = getElement("clientSchedulesList");
     if (!list) return;
@@ -487,12 +508,13 @@ function logoutAdmin() {
 }
 
 async function showAdminSchedules() {
-  if (!sessionStorage.getItem("adminLoggedIn") || !db) {
+  if (!sessionStorage.getItem("adminLoggedIn")) {
     alert("Acesso negado!");
     return;
   }
   try {
-    const { data, error } = await db.from("agendamentos").select("*").order("date", { ascending: true });
+    const database = await waitForSupabase();
+    const { data, error } = await database.from("agendamentos").select("*").order("date", { ascending: true });
     if (error) throw error;
     const list = getElement("schedulesList");
     if (!list) return;
@@ -542,23 +564,22 @@ async function confirmSchedule() {
     alert("Por favor, preencha todos os campos!");
     return;
   }
-  if (!db) {
-    alert("Erro: Banco de dados não conectado. Tente novamente.");
-    return;
-  }
+  
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     alert("Por favor, insira um email válido!");
     return;
   }
+  
   try {
-    const { data: existing, error: checkError } = await db.from("agendamentos").select("id").eq("date", date).eq("time", time);
+    const database = await waitForSupabase();
+    const { data: existing, error: checkError } = await database.from("agendamentos").select("id").eq("date", date).eq("time", time);
     if (checkError) throw checkError;
     if (existing && existing.length > 0) {
       alert("❌ Este horário já foi marcado! Escolha outro.");
       return;
     }
-    const { error } = await db.from("agendamentos").insert([{ name, email, phone, date, time }]);
+    const { error } = await database.from("agendamentos").insert([{ name, email, phone, date, time }]);
     if (error) throw error;
     nameInput.value = "";
     emailInput.value = "";
@@ -577,12 +598,9 @@ async function confirmSchedule() {
 // ========== GERENCIAR ==========
 async function deleteSchedule(id) {
   if (!confirm("Tem certeza que deseja remover este agendamento?")) return;
-  if (!db) {
-    alert("Erro: Banco de dados não conectado.");
-    return;
-  }
   try {
-    const { error } = await db.from("agendamentos").delete().eq("id", id);
+    const database = await waitForSupabase();
+    const { error } = await database.from("agendamentos").delete().eq("id", id);
     if (error) throw error;
     alert("✅ Agendamento deletado!");
     await showAdminSchedules();
@@ -594,16 +612,13 @@ async function deleteSchedule(id) {
 
 async function clearAllSchedules() {
   if (!confirm("Tem certeza que deseja limpar TODA a agenda? Esta ação não pode ser desfeita!")) return;
-  if (!db) {
-    alert("Erro: Banco de dados não conectado.");
-    return;
-  }
   try {
-    const { data: allSchedules, error: fetchError } = await db.from("agendamentos").select("id");
+    const database = await waitForSupabase();
+    const { data: allSchedules, error: fetchError } = await database.from("agendamentos").select("id");
     if (fetchError) throw fetchError;
     const count = allSchedules ? allSchedules.length : 0;
     if (count > 0) {
-      const { error } = await db.from("agendamentos").delete().gt("id", 0);
+      const { error } = await database.from("agendamentos").delete().gt("id", 0);
       if (error) throw error;
     }
     alert(`✅ ${count} agendamentos foram deletados!`);
