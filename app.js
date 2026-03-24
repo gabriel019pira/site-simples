@@ -1,70 +1,43 @@
-// ========== CONFIGURAÇÃO SUPABASE ==========
-let db;
-
+// ========== VARIÁVEIS GLOBAIS ==========
+let db = null;
 const ADMIN_PASSWORD = "admin123";
 
-// DOM Elements
-let sidebar, sidebarToggle, scheduleModal, clientLoginModal, adminLoginModal, clientSchedulesModal, adminModal, modalOverlay;
-
-// Aguardar Supabase carregar
-function initSupabase() {
+// Inicializar Supabase de forma assíncrona
+(async function initSupabaseAsync() {
   if (typeof supabase === 'undefined') {
-    console.error("❌ Supabase não carregou ainda!");
-    setTimeout(initSupabase, 300);
-    return;
-  }
-  
-  const SUPABASE_URL = "https://dpobhypdzgorabjlkppv.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs";
-  db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  console.log("✅ Supabase inicializado!");
-}
-
-function initDOM() {
-  sidebar = document.getElementById("sidebar");
-  sidebarToggle = document.getElementById("sidebarToggle");
-  scheduleModal = document.getElementById("scheduleModal");
-  clientLoginModal = document.getElementById("clientLoginModal");
-  adminLoginModal = document.getElementById("adminLoginModal");
-  clientSchedulesModal = document.getElementById("clientSchedulesModal");
-  adminModal = document.getElementById("adminModal");
-  modalOverlay = document.getElementById("modalOverlay");
-  
-  console.log("✅ DOM inicializado!");
-  console.log("✅ Sistema pronto!");
-  
-  // Event Listeners
-  if (modalOverlay) {
-    modalOverlay.addEventListener("click", closeAllModals);
-  }
-  
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeAllModals();
-    }
-  });
-  
-  document.querySelectorAll(".modal-content").forEach(modal => {
-    modal.addEventListener("click", (e) => {
-      e.stopPropagation();
+    await new Promise(resolve => {
+      const checkSupabase = setInterval(() => {
+        if (typeof supabase !== 'undefined') {
+          clearInterval(checkSupabase);
+          resolve();
+        }
+      }, 100);
+      setTimeout(() => clearInterval(checkSupabase), 5000);
     });
-  });
+  }
+  
+  try {
+    const SUPABASE_URL = "https://dpobhypdzgorabjlkppv.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs";
+    db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log("✅ Supabase inicializado!");
+  } catch (e) {
+    console.error("❌ Erro ao inicializar Supabase:", e);
+  }
+})();
+
+// ========== FUNÇÕES AUXILIARES ==========
+function getElement(id) {
+  return document.getElementById(id);
 }
 
-// Aguardar DOM e Supabase
-window.addEventListener("load", () => {
-  initSupabase();
-  initDOM();
-});
-
-// ========== SIDEBAR ==========
 function toggleSidebar() {
-  if (sidebar) {
-    sidebar.classList.toggle("collapsed");
-    document.querySelector("main").classList.toggle("sidebar-collapsed");
-    document.querySelector(".footer").classList.toggle("sidebar-collapsed");
-    document.querySelector(".topbar").classList.toggle("sidebar-collapsed");
-  }
+  const sidebar = getElement("sidebar");
+  if (!sidebar) return;
+  sidebar.classList.toggle("collapsed");
+  document.querySelector("main")?.classList.toggle("sidebar-collapsed");
+  document.querySelector(".footer")?.classList.toggle("sidebar-collapsed");
+  document.querySelector(".topbar")?.classList.toggle("sidebar-collapsed");
 }
 
 function clearCache() {
@@ -73,10 +46,127 @@ function clearCache() {
   location.reload();
 }
 
-// ========== HORÁRIOS DISPONÍVEIS ==========
+function closeAllModals() {
+  const modals = [
+    "scheduleModal",
+    "clientLoginModal", 
+    "adminLoginModal",
+    "clientSchedulesModal",
+    "adminModal"
+  ];
+  
+  modals.forEach(id => {
+    const modal = getElement(id);
+    if (modal) modal.classList.remove("active");
+  });
+  
+  const overlay = getElement("modalOverlay");
+  if (overlay) overlay.classList.remove("active");
+  
+  const sidebar = getElement("sidebar");
+  if (sidebar) sidebar.classList.remove("collapsed");
+}
+
+// ========== MODAIS ==========
+function openScheduleModal() {
+  const modal = getElement("scheduleModal");
+  const overlay = getElement("modalOverlay");
+  if (!modal || !overlay) return;
+  
+  modal.classList.add("active");
+  overlay.classList.add("active");
+  
+  const today = new Date().toISOString().split("T")[0];
+  const cal = getElement("calendarInput");
+  if (cal) {
+    cal.min = today;
+    cal.value = today;
+    updateAvailableTimes();
+  }
+}
+
+function closeScheduleModal() {
+  const modal = getElement("scheduleModal");
+  const overlay = getElement("modalOverlay");
+  if (modal) modal.classList.remove("active");
+  if (overlay) overlay.classList.remove("active");
+}
+
+function openClientLoginModal() {
+  const modal = getElement("clientLoginModal");
+  const overlay = getElement("modalOverlay");
+  if (!modal || !overlay) return;
+  
+  modal.classList.add("active");
+  overlay.classList.add("active");
+  
+  const phone = getElement("clientPhoneLogin");
+  if (phone) phone.value = "";
+}
+
+function closeClientLoginModal() {
+  const modal = getElement("clientLoginModal");
+  const overlay = getElement("modalOverlay");
+  if (modal) modal.classList.remove("active");
+  if (overlay) overlay.classList.remove("active");
+}
+
+function openClientSchedulesModal() {
+  const modal = getElement("clientSchedulesModal");
+  const overlay = getElement("modalOverlay");
+  if (!modal || !overlay) return;
+  
+  modal.classList.add("active");
+  overlay.classList.add("active");
+}
+
+function closeClientSchedulesModal() {
+  const modal = getElement("clientSchedulesModal");
+  const overlay = getElement("modalOverlay");
+  if (modal) modal.classList.remove("active");
+  if (overlay) overlay.classList.remove("active");
+}
+
+function openAdminLoginModal() {
+  const modal = getElement("adminLoginModal");
+  const overlay = getElement("modalOverlay");
+  if (!modal || !overlay) return;
+  
+  modal.classList.add("active");
+  overlay.classList.add("active");
+  
+  const pass = getElement("adminPassword");
+  if (pass) pass.value = "";
+}
+
+function closeAdminLoginModal() {
+  const modal = getElement("adminLoginModal");
+  const overlay = getElement("modalOverlay");
+  if (modal) modal.classList.remove("active");
+  if (overlay) overlay.classList.remove("active");
+}
+
+function openAdminModal() {
+  const modal = getElement("adminModal");
+  const overlay = getElement("modalOverlay");
+  if (!modal || !overlay) return;
+  
+  modal.classList.add("active");
+  overlay.classList.add("active");
+}
+
+function closeAdminModal() {
+  const modal = getElement("adminModal");
+  const overlay = getElement("modalOverlay");
+  if (modal) modal.classList.remove("active");
+  if (overlay) overlay.classList.remove("active");
+}
+
+// ========== HORÁRIOS ==========
 async function getBookedTimes(date) {
   try {
     if (!db) return [];
+    
     const { data, error } = await db
       .from("agendamentos")
       .select("time")
@@ -95,98 +185,56 @@ async function getBookedTimes(date) {
 }
 
 async function updateAvailableTimes() {
-  const selectedDate = document.getElementById("calendarInput").value;
-  const timeSelect = document.getElementById("timeInput");
-  const bookedTimesInfo = document.getElementById("bookedTimes");
-  const availableInfo = document.getElementById("availableInfo");
+  const cal = getElement("calendarInput");
+  const timeSelect = getElement("timeInput");
+  const bookedInfo = getElement("bookedTimes");
+  const availInfo = getElement("availableInfo");
   
-  if (!selectedDate) {
-    bookedTimesInfo.textContent = "";
-    availableInfo.textContent = "";
-    Array.from(timeSelect.options).forEach(option => {
-      if (option.value) option.disabled = false;
+  if (!cal || !timeSelect) return;
+  
+  const date = cal.value;
+  if (!date) {
+    if (bookedInfo) bookedInfo.textContent = "";
+    if (availInfo) availInfo.textContent = "";
+    Array.from(timeSelect.options).forEach(opt => {
+      if (opt.value) opt.disabled = false;
     });
     return;
   }
   
-  const bookedTimes = await getBookedTimes(selectedDate);
+  const booked = await getBookedTimes(date);
   let disabledCount = 0;
   
-  Array.from(timeSelect.options).forEach(option => {
-    if (option.value) {
-      const isBooked = bookedTimes.includes(option.value);
-      option.disabled = isBooked;
-      if (isBooked) {
-        option.textContent = `${option.value} (INDISPONÍVEL)`;
-        disabledCount++;
-      } else {
-        option.textContent = option.value;
-      }
+  Array.from(timeSelect.options).forEach(opt => {
+    if (opt.value) {
+      const isBooked = booked.includes(opt.value);
+      opt.disabled = isBooked;
+      opt.textContent = isBooked ? `${opt.value} (INDISPONÍVEL)` : opt.value;
+      if (isBooked) disabledCount++;
     }
   });
   
-  const totalHours = Array.from(timeSelect.options).filter(o => o.value).length;
-  const availableCount = totalHours - disabledCount;
+  const total = Array.from(timeSelect.options).filter(o => o.value).length;
+  const available = total - disabledCount;
   
-  if (disabledCount > 0) {
-    bookedTimesInfo.textContent = `⏳ Horários marcados: ${bookedTimes.join(", ")}`;
-  } else {
-    bookedTimesInfo.textContent = "";
+  if (bookedInfo) {
+    bookedInfo.textContent = disabledCount > 0 ? `⏳ Horários marcados: ${booked.join(", ")}` : "";
+  }
+  if (availInfo) {
+    availInfo.textContent = `✅ ${available} horários disponíveis`;
   }
   
-  availableInfo.textContent = `✅ ${availableCount} horários disponíveis`;
-  
-  if (timeSelect.value && bookedTimes.includes(timeSelect.value)) {
+  if (timeSelect.value && booked.includes(timeSelect.value)) {
     timeSelect.value = "";
   }
 }
 
-// ========== MODAIS DE AGENDAMENTO ==========
-function openScheduleModal() {
-  if (!scheduleModal || !modalOverlay) {
-    console.error("Modal não encontrada");
-    return;
-  }
-  scheduleModal.classList.add("active");
-  modalOverlay.classList.add("active");
-  
-  const today = new Date().toISOString().split("T")[0];
-  document.getElementById("calendarInput").min = today;
-  document.getElementById("calendarInput").value = today;
-  
-  setTimeout(() => {
-    updateAvailableTimes();
-  }, 100);
-}
-
-function closeScheduleModal() {
-  if (scheduleModal && modalOverlay) {
-    scheduleModal.classList.remove("active");
-    modalOverlay.classList.remove("active");
-  }
-}
-
-// ========== MODAIS LOGIN CLIENTE ==========
-function openClientLoginModal() {
-  if (!clientLoginModal || !modalOverlay) {
-    console.error("Modal login cliente não encontrada");
-    return;
-  }
-  clientLoginModal.classList.add("active");
-  modalOverlay.classList.add("active");
-  document.getElementById("clientPhoneLogin").value = "";
-}
-
-function closeClientLoginModal() {
-  if (clientLoginModal && modalOverlay) {
-    clientLoginModal.classList.remove("active");
-    modalOverlay.classList.remove("active");
-  }
-}
-
+// ========== AUTENTICAÇÃO CLIENTE ==========
 function validateClientLogin() {
-  const phone = document.getElementById("clientPhoneLogin").value.trim();
+  const phoneInput = getElement("clientPhoneLogin");
+  if (!phoneInput) return;
   
+  const phone = phoneInput.value.trim();
   if (!phone) {
     alert("Por favor, digite seu telefone!");
     return;
@@ -194,27 +242,11 @@ function validateClientLogin() {
   
   sessionStorage.setItem("clientPhone", phone);
   closeClientLoginModal();
+  
   setTimeout(() => {
     openClientSchedulesModal();
     showClientSchedules();
-  }, 200);
-}
-
-// ========== MODAIS VISUALIZAÇÃO CLIENTE ==========
-function openClientSchedulesModal() {
-  if (!clientSchedulesModal || !modalOverlay) {
-    console.error("Modal agendamentos cliente não encontrada");
-    return;
-  }
-  clientSchedulesModal.classList.add("active");
-  modalOverlay.classList.add("active");
-}
-
-function closeClientSchedulesModal() {
-  if (clientSchedulesModal && modalOverlay) {
-    clientSchedulesModal.classList.remove("active");
-    modalOverlay.classList.remove("active");
-  }
+  }, 100);
 }
 
 function logoutClient() {
@@ -223,9 +255,8 @@ function logoutClient() {
 }
 
 async function showClientSchedules() {
-  const clientPhone = sessionStorage.getItem("clientPhone");
-  
-  if (!clientPhone || !db) {
+  const phone = sessionStorage.getItem("clientPhone");
+  if (!phone || !db) {
     alert("Acesso negado!");
     return;
   }
@@ -234,20 +265,20 @@ async function showClientSchedules() {
     const { data, error } = await db
       .from("agendamentos")
       .select("*")
-      .eq("phone", clientPhone)
+      .eq("phone", phone)
       .order("date", { ascending: true });
     
     if (error) throw error;
     
-    const clientSchedulesList = document.getElementById("clientSchedulesList");
+    const list = getElement("clientSchedulesList");
+    if (!list) return;
     
     if (!data || data.length === 0) {
-      clientSchedulesList.innerHTML = '<p class="no-schedules">Você não possui agendamentos.</p>';
+      list.innerHTML = '<p class="no-schedules">Você não possui agendamentos.</p>';
       return;
     }
     
-    clientSchedulesList.innerHTML = "";
-    
+    list.innerHTML = "";
     data.forEach(schedule => {
       const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
       const item = document.createElement("div");
@@ -258,7 +289,7 @@ async function showClientSchedules() {
         <p><strong>Agendado em:</strong> ${new Date(schedule.created_at).toLocaleString("pt-BR")}</p>
         <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">Para cancelar, entre em contato conosco.</p>
       `;
-      clientSchedulesList.appendChild(item);
+      list.appendChild(item);
     });
   } catch (e) {
     console.error("Erro em showClientSchedules:", e);
@@ -266,53 +297,22 @@ async function showClientSchedules() {
   }
 }
 
-// ========== MODAIS LOGIN ADMIN ==========
-function openAdminLoginModal() {
-  if (!adminLoginModal || !modalOverlay) {
-    console.error("Modal login admin não encontrada");
-    return;
-  }
-  adminLoginModal.classList.add("active");
-  modalOverlay.classList.add("active");
-  document.getElementById("adminPassword").value = "";
-}
-
-function closeAdminLoginModal() {
-  if (adminLoginModal && modalOverlay) {
-    adminLoginModal.classList.remove("active");
-    modalOverlay.classList.remove("active");
-  }
-}
-
+// ========== AUTENTICAÇÃO ADMIN ==========
 function validateAdminLogin() {
-  const password = document.getElementById("adminPassword").value;
+  const passInput = getElement("adminPassword");
+  if (!passInput) return;
   
+  const password = passInput.value;
   if (password === ADMIN_PASSWORD) {
     sessionStorage.setItem("adminLoggedIn", "true");
     closeAdminLoginModal();
+    
     setTimeout(() => {
       openAdminModal();
       showAdminSchedules();
-    }, 200);
+    }, 100);
   } else {
     alert("❌ Senha incorreta!");
-  }
-}
-
-// ========== MODAIS ADMIN ==========
-function openAdminModal() {
-  if (!adminModal || !modalOverlay) {
-    console.error("Modal admin não encontrada");
-    return;
-  }
-  adminModal.classList.add("active");
-  modalOverlay.classList.add("active");
-}
-
-function closeAdminModal() {
-  if (adminModal && modalOverlay) {
-    adminModal.classList.remove("active");
-    modalOverlay.classList.remove("active");
   }
 }
 
@@ -335,15 +335,15 @@ async function showAdminSchedules() {
     
     if (error) throw error;
     
-    const schedulesList = document.getElementById("schedulesList");
+    const list = getElement("schedulesList");
+    if (!list) return;
     
     if (!data || data.length === 0) {
-      schedulesList.innerHTML = '<p class="no-schedules">Nenhum agendamento realizado.</p>';
+      list.innerHTML = '<p class="no-schedules">Nenhum agendamento realizado.</p>';
       return;
     }
     
-    schedulesList.innerHTML = "";
-    
+    list.innerHTML = "";
     data.forEach(schedule => {
       const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
       const item = document.createElement("div");
@@ -357,7 +357,7 @@ async function showAdminSchedules() {
         <p><strong>Agendado em:</strong> ${new Date(schedule.created_at).toLocaleString("pt-BR")}</p>
         <button class="btn" style="margin-top: 0.5rem; background: #ff6b6b;" onclick="deleteSchedule(${schedule.id})">Remover</button>
       `;
-      schedulesList.appendChild(item);
+      list.appendChild(item);
     });
   } catch (e) {
     console.error("Erro em showAdminSchedules:", e);
@@ -367,11 +367,19 @@ async function showAdminSchedules() {
 
 // ========== AGENDAMENTO ==========
 async function confirmSchedule() {
-  const name = document.getElementById("clientName").value.trim();
-  const email = document.getElementById("clientEmail").value.trim();
-  const phone = document.getElementById("clientPhone").value.trim();
-  const date = document.getElementById("calendarInput").value;
-  const time = document.getElementById("timeInput").value;
+  const nameInput = getElement("clientName");
+  const emailInput = getElement("clientEmail");
+  const phoneInput = getElement("clientPhone");
+  const calInput = getElement("calendarInput");
+  const timeInput = getElement("timeInput");
+  
+  if (!nameInput || !emailInput || !phoneInput || !calInput || !timeInput) return;
+  
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const phone = phoneInput.value.trim();
+  const date = calInput.value;
+  const time = timeInput.value;
   
   if (!name || !email || !phone || !date || !time) {
     alert("Por favor, preencha todos os campos!");
@@ -409,24 +417,23 @@ async function confirmSchedule() {
     
     if (error) throw error;
     
-    document.getElementById("clientName").value = "";
-    document.getElementById("clientEmail").value = "";
-    document.getElementById("clientPhone").value = "";
-    document.getElementById("calendarInput").value = "";
-    document.getElementById("timeInput").value = "";
+    nameInput.value = "";
+    emailInput.value = "";
+    phoneInput.value = "";
+    calInput.value = "";
+    timeInput.value = "";
     
     closeScheduleModal();
     const formatDate = new Date(date).toLocaleDateString("pt-BR");
     alert(`✅ Agendamento realizado com sucesso!\n\n📅 Data: ${formatDate}\n⏰ Horário: ${time}\n👤 Cliente: ${name}`);
     
-    await updateAvailableTimes();
   } catch (error) {
     console.error("Erro em confirmSchedule:", error);
     alert("❌ Erro ao criar agendamento. Tente novamente.");
   }
 }
 
-// ========== DELETAR AGENDAMENTOS ==========
+// ========== GERENCIAR AGENDAMENTOS ==========
 async function deleteSchedule(id) {
   if (!confirm("Tem certeza que deseja remover este agendamento?")) {
     return;
@@ -470,9 +477,9 @@ async function clearAllSchedules() {
     
     if (fetchError) throw fetchError;
     
-    const deletedCount = allSchedules ? allSchedules.length : 0;
+    const count = allSchedules ? allSchedules.length : 0;
     
-    if (deletedCount > 0) {
+    if (count > 0) {
       const { error } = await db
         .from("agendamentos")
         .delete()
@@ -481,7 +488,7 @@ async function clearAllSchedules() {
       if (error) throw error;
     }
     
-    alert(`✅ ${deletedCount} agendamentos foram deletados!`);
+    alert(`✅ ${count} agendamentos foram deletados!`);
     await showAdminSchedules();
   } catch (e) {
     console.error("Erro em clearAllSchedules:", e);
@@ -489,18 +496,43 @@ async function clearAllSchedules() {
   }
 }
 
-// ========== FECHAR MODAIS ==========
-function closeAllModals() {
-  if (scheduleModal) scheduleModal.classList.remove("active");
-  if (clientLoginModal) clientLoginModal.classList.remove("active");
-  if (adminLoginModal) adminLoginModal.classList.remove("active");
-  if (clientSchedulesModal) clientSchedulesModal.classList.remove("active");
-  if (adminModal) adminModal.classList.remove("active");
-  if (modalOverlay) modalOverlay.classList.remove("active");
-  if (sidebar) sidebar.classList.remove("collapsed");
-  document.querySelector("main")?.classList.remove("sidebar-collapsed");
-  document.querySelector(".footer")?.classList.remove("sidebar-collapsed");
-  document.querySelector(".topbar")?.classList.remove("sidebar-collapsed");
+// ========== EVENT LISTENERS ==========
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() {
+    const overlay = getElement("modalOverlay");
+    if (overlay) {
+      overlay.addEventListener("click", closeAllModals);
+    }
+    
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeAllModals();
+      }
+    });
+    
+    document.querySelectorAll(".modal-content").forEach(modal => {
+      modal.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    });
+  });
+} else {
+  const overlay = getElement("modalOverlay");
+  if (overlay) {
+    overlay.addEventListener("click", closeAllModals);
+  }
+  
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeAllModals();
+    }
+  });
+  
+  document.querySelectorAll(".modal-content").forEach(modal => {
+    modal.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  });
 }
 
-console.log("✅ App.js carregado com sucesso!");
+console.log("✅ App.js carregado!");
