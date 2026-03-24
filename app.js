@@ -1,8 +1,7 @@
 // ========== CONFIGURAÇÃO SUPABASE ==========
 const SUPABASE_URL = "https://dpobhypdzgorabjlkppv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs";
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const ADMIN_PASSWORD = "admin123";
 const SCHEDULES_KEY = "schedules";
