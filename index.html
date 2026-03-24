@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Franciele Silva - Psicóloga Online</title>
-  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="main.css?v=20260324001" />
 </head>
 <body>
   <header class="topbar">
@@ -262,10 +262,16 @@ function clearCache() {
 function closeAllModals() {
   ["scheduleModal", "clientLoginModal", "adminLoginModal", "clientSchedulesModal", "adminModal"].forEach(id => {
     const m = el(id);
-    if (m) m.classList.remove("active");
+    if (m) {
+      m.classList.remove("active");
+      m.style.display = "none";
+    }
   });
   const o = el("modalOverlay");
-  if (o) o.classList.remove("active");
+  if (o) {
+    o.classList.remove("active");
+    o.style.display = "none";
+  }
 }
 
 function openScheduleModal() {
@@ -279,7 +285,12 @@ function openScheduleModal() {
   }
   m.classList.add("active");
   o.classList.add("active");
+  m.style.display = "block";
+  o.style.display = "block";
   console.log("✅ Modal aberto, classes adicionadas");
+  console.log("Modal display:", window.getComputedStyle(m).display);
+  console.log("Overlay display:", window.getComputedStyle(o).display);
+  console.log("Modal classes:", m.className);
   const today = new Date().toISOString().split("T")[0];
   const cal = el("calendarInput");
   if (cal) {
@@ -302,6 +313,8 @@ function openClientLoginModal() {
   if (m && o) {
     m.classList.add("active");
     o.classList.add("active");
+    m.style.display = "block";
+    o.style.display = "block";
     console.log("✅ Modal Cliente aberto");
   } else {
     console.error("❌ Modal ou Overlay não encontrado!");
@@ -335,6 +348,8 @@ function openAdminLoginModal() {
   if (m && o) {
     m.classList.add("active");
     o.classList.add("active");
+    m.style.display = "block";
+    o.style.display = "block";
     console.log("✅ Modal Admin aberto");
   } else {
     console.error("❌ Modal ou Overlay não encontrado!");
