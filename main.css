@@ -36,7 +36,7 @@ body { font-family: "Inter", "Segoe UI", sans-serif; color: #222; line-height: 1
 /* Layout principal */
 main { padding-top: 0; margin-left: 280px; transition: margin-left 0.3s ease; }
 main.sidebar-collapsed { margin-left: 60px; }
-.hero { background: url('foto de fundo.jpg') center/cover no-repeat; color: #222; padding: 150px 0; }
+.hero { background: url('foto-fundo.jpg') center/cover no-repeat; color: #222; padding: 150px 0; }
 .intro { padding: 50px 0; text-align: left; }
 
 /* Padronização de títulos */
