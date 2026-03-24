@@ -4,7 +4,7 @@ body { font-family: "Inter", "Segoe UI", sans-serif; color: #222; line-height: 1
 .container-header { width: min(1140px, 92%); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
 
 /* Header */
-.topbar { background: #fce4ec; color: #c2185b; padding: 0.8rem 0; position: sticky; top: 0; z-index: 10; margin-left: 280px; transition: margin-left 0.3s ease; }
+.topbar { background: #fce4ec; color: #c2185b; padding: 0.8rem 0; position: sticky; top: 0; z-index: 10; margin-left: 180px; transition: margin-left 0.3s ease; }
 .topbar.sidebar-collapsed { margin-left: 60px; }
 .logo-section { display: flex; flex-direction: column; align-items: flex-start; }
 .topbar .logo { font-weight: 700; font-size: 2rem; text-decoration: none; color: #c2185b; }
@@ -34,7 +34,7 @@ body { font-family: "Inter", "Segoe UI", sans-serif; color: #222; line-height: 1
 .buttons-container .btn-admin-footer { width: 100%; max-width: 600px; margin: 0; }
 
 /* Layout principal */
-main { padding-top: 0; margin-left: 280px; transition: margin-left 0.3s ease; }
+main { padding-top: 0; margin-left: 180px; transition: margin-left 0.3s ease; }
 main.sidebar-collapsed { margin-left: 60px; }
 .hero { background: url('foto-fundo.jpg') center/cover no-repeat; color: #222; padding: 150px 0; }
 .intro { padding: 50px 0; text-align: left; }
@@ -47,6 +47,7 @@ h2 { color: #e91e63; margin-bottom: 0.8rem; font-size: 1.8rem; }
 
 /* Seções */
 .sobre, .especialidades, .atendimento, .contato { padding: 70px 0; }
+.sobre p { margin-bottom: 1.5rem; }
 
 /* Botão principal */
 .btn { background: #e91e63; color: #fff; padding: 0.8rem 1.2rem; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600; border: none; cursor: pointer; font-size: 1rem; }
@@ -97,7 +98,7 @@ h2 { color: #e91e63; margin-bottom: 0.8rem; font-size: 1.8rem; }
 .btn-delete-all:hover { background: #ff5252; }
 
 /* Footer */
-.footer { text-align: center; background: #f1f5f6; padding: 0.8rem 0; font-size: 0.90rem; color: #555; margin-left: 280px; transition: margin-left 0.3s ease; }\n.footer.sidebar-collapsed { margin-left: 60px; }
+.footer { text-align: center; background: #f1f5f6; padding: 0.8rem 0; font-size: 0.90rem; color: #555; margin-left: 180px; transition: margin-left 0.3s ease; }\n.footer.sidebar-collapsed { margin-left: 60px; }
 
 /* Imagens de Perfil */
 .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto; }
