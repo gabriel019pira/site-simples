@@ -90,36 +90,6 @@ function updateAvailableTimes() {
     timeSelect.value = "";
   }
 }
-  
-  let disabledCount = 0;
-  Array.from(timeSelect.options).forEach(option => {
-    if (option.value) {
-      const isBooked = bookedTimesArray.includes(option.value);
-      option.disabled = isBooked;
-      if (isBooked) {
-        option.textContent = `${option.value} (INDISPONÍVEL)`;
-        disabledCount++;
-      } else {
-        option.textContent = option.value;
-      }
-    }
-  });
-  
-  const totalHours = Array.from(timeSelect.options).filter(o => o.value).length;
-  const availableCount = totalHours - disabledCount;
-  
-  if (disabledCount > 0) {
-    bookedTimesInfo.textContent = `⏳ Horários marcados: ${bookedTimesArray.join(", ")}`;
-  } else {
-    bookedTimesInfo.textContent = "";
-  }
-  
-  availableInfo.textContent = `✅ ${availableCount} horários disponíveis`;
-  
-  if (timeSelect.value && bookedTimesArray.includes(timeSelect.value)) {
-    timeSelect.value = "";
-  }
-}
 
 // Chamar ao abrir o modal
 function openScheduleModal() {
