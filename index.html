@@ -4,606 +4,100 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Franciele Silva - Psicóloga Online</title>
-  <link rel="stylesheet" href="main.css?v=20260324001" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: #f9fafb; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+    
+    header { background: #fce4ec; color: #c2185b; padding: 20px 0; text-align: center; }
+    header h1 { font-size: 2.5rem; margin-bottom: 5px; }
+    header p { font-size: 0.9rem; }
+    
+    nav { background: #e91e63; padding: 15px 0; }
+    nav a { color: white; text-decoration: none; margin: 0 15px; display: inline-block; }
+    nav a:hover { text-decoration: underline; }
+    
+    section { background: white; margin: 20px 0; padding: 30px; border-radius: 8px; }
+    section h2 { color: #e91e63; margin-bottom: 15px; font-size: 1.8rem; }
+    section p { margin-bottom: 15px; }
+    
+    .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px; display: block; }
+    
+    ul { list-style: none; }
+    ul li { background: #f0f0f0; padding: 10px 15px; margin: 5px 0; border-radius: 5px; }
+    
+    .contact-info { font-size: 1.1rem; }
+    .contact-info a { color: #e91e63; text-decoration: none; }
+    .contact-info a:hover { text-decoration: underline; }
+    
+    footer { background: #f1f5f6; text-align: center; padding: 20px; font-size: 0.9rem; color: #666; }
+    
+    @media (max-width: 768px) {
+      header h1 { font-size: 1.8rem; }
+      nav a { display: block; margin: 10px 0; }
+      section { padding: 15px; }
+    }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="container-header">
-      <div class="logo-section">
-        <a class="logo" href="#">Franciele Silva</a>
-        <p class="crp">CRP: 12/34567</p>
-      </div>
+  <header>
+    <div class="container">
+      <h1>Franciele Silva</h1>
+      <p>Psicóloga Online | CRP: 12/34567</p>
     </div>
   </header>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h3>Menu</h3>
-      <button class="sidebar-toggle" id="sidebarToggle" title="Recolher/Expandir">‹</button>
-    </div>
-    <nav class="sidebar-menu">
-      <a href="#sobre" class="sidebar-link">Sobre</a>
-      <a href="#especialidades" class="sidebar-link">Especialidades</a>
-      <a href="#atendimento" class="sidebar-link">Atendimento</a>
-      <a href="#contato" class="sidebar-link">Contato</a>
-      <button class="btn-clear-cache" id="clearCacheBtn">🔄 Limpar Cache</button>
-    </nav>
-  </aside>
+  <nav class="container">
+    <a href="#sobre">Sobre</a>
+    <a href="#especialidades">Especialidades</a>
+    <a href="#como-funciona">Como Funciona</a>
+    <a href="#contato">Contato</a>
+  </nav>
 
-  <main>
-    <section class="hero"></section>
-
-    <section class="intro container">
-      <h2>Terapia online com acolhimento e segurança</h2>
-      <p>Agende sua sessão com a psicóloga Franciele Silva. Atendimento humanizado e especial para ansiedade, depressão e autoconhecimento.</p>
-      <button class="btn" id="scheduleBtn">Agendar Consulta</button>
-    </section>
-
-    <section id="sobre" class="sobre container">
+  <main class="container">
+    
+    <section id="sobre">
       <h2>Sobre</h2>
-      <img src="foto-perfil.jpg" alt="Franciele Silva - Psicóloga" class="profile-img">
-      <p>Olá! Seja bem-vindo(a) ao meu perfil. Sou Psicóloga, com sólida experiência na área de Recursos Humanos, especialmente em Recrutamento e Seleção, e vivência no setor administrativo.</p>
-      <p>Minha formação em Psicologia, aliada aos estudos contínuos em Terapia Cognitivo-Comportamental, amplia meu olhar analítico, minha capacidade de tomada de decisão, comunicação assertiva e gestão de pessoas, competências essenciais tanto no RH quanto em rotinas administrativas. Tenho um perfil organizado, responsável e orientado a processos.</p>
-      <p>Ao longo da minha trajetória no administrativo, desenvolvi habilidades em organização e controle de documentos, atendimento ao cliente, comunicação verbal e escrita, além de suporte a rotinas internas com foco em eficiência e qualidade. Acredito que carreira se constrói com conhecimento, por isso mantenho uma postura constante de atualização por meio de cursos, leituras e estudos.</p>
-      <p>Essa base teórica e prática me permite atuar de forma estratégica, ética e humanizada nos ambientes em que estou inserida. Atualmente, busco oportunidades em regime Home Office, nas áreas de Recursos Humanos ou Administrativo, onde eu possa contribuir com organização, análise, responsabilidade e visão psicológica aplicada ao trabalho.</p>
+      <img src="foto-perfil.jpg" alt="Franciele Silva" class="profile-img">
+      <p>Olá! Bem-vindo(a) ao meu perfil. Sou Psicóloga com sólida experiência em Recursos Humanos, especialmente em Recrutamento e Seleção.</p>
+      <p>Minha formação em Psicologia, aliada aos estudos contínuos em Terapia Cognitivo-Comportamental, amplia meu olhar analítico e minha capacidade de comunicação assertiva.</p>
+      <p>Atuo de forma estratégica, ética e humanizada, oferecendo acompanhamento especializado para ansiedade, depressão e autoconhecimento.</p>
     </section>
 
-    <section id="especialidades" class="especialidades container">
+    <section id="especialidades">
       <h2>Especialidades</h2>
       <ul>
-        <li>TDHA</li>
-        <li>Depressão</li>
-        <li>Autoconhecimento</li>
-        <li>Relacionamentos</li>
+        <li>🧠 TDAH</li>
+        <li>😔 Depressão</li>
+        <li>🌱 Autoconhecimento</li>
+        <li>💑 Relacionamentos</li>
       </ul>
     </section>
 
-    <section id="atendimento" class="atendimento container">
-      <h2>Como funciona</h2>
-      <p>Sessões de 50 minutos por vídeo, chat ou áudio. Plano de tratamento personalizado.</p>
-      <div class="cards">
-        <article><strong>1</strong><p>Contato inicial</p></article>
-        <article><strong>2</strong><p>Entrevista e avaliação</p></article>
-        <article><strong>3</strong><p>Acompanhamento contínuo</p></article>
-      </div>
+    <section id="como-funciona">
+      <h2>Como Funciona</h2>
+      <p>Oferço sessões de 50 minutos por vídeo, chat ou áudio, com plano de tratamento personalizado para suas necessidades.</p>
+      <h3 style="color: #e91e63; margin-top: 20px; margin-bottom: 15px;">Processo:</h3>
+      <ol style="margin-left: 20px;">
+        <li>📞 <strong>Contato inicial</strong> - Conversa sobre seus objetivos</li>
+        <li>📋 <strong>Entrevista e avaliação</strong> - Conhecimento completo da sua situação</li>
+        <li>👥 <strong>Acompanhamento contínuo</strong> - Suporte personalizado</li>
+      </ol>
     </section>
 
-    <section id="contato" class="contato container">
+    <section id="contato">
       <h2>Contato</h2>
       <div class="contact-info">
-        <p>📧 <a href="mailto:francielesilva.psirh@gmail.com">francielesilva.psirh@gmail.com</a></p>
-        <p>📞 <a href="https://wa.me/5519997505260" target="_blank">(19) 99750-5260</a></p>
-        <p>📱 Instagram: <a href="https://instagram.com/francielesilva_oficial" target="_blank">@francielesilva_oficial</a></p>
-      </div>
-      <div class="buttons-container">
-        <button class="btn-admin btn-admin-footer" id="clientBtn">Área do Cliente</button>
-        <button class="btn-admin btn-admin-footer" id="adminBtn">Área do Proprietário</button>
+        <p>📧 <strong>Email:</strong> <a href="mailto:francielesilva.psirh@gmail.com">francielesilva.psirh@gmail.com</a></p>
+        <p>📞 <strong>WhatsApp:</strong> <a href="https://wa.me/5519997505260" target="_blank">(19) 99750-5260</a></p>
+        <p>📱 <strong>Instagram:</strong> <a href="https://instagram.com/francielesilva_oficial" target="_blank">@francielesilva_oficial</a></p>
       </div>
     </section>
+
   </main>
 
-  <!-- MODAIS -->
-  <div class="modal" id="scheduleModal">
-    <div class="modal-content">
-      <button class="close-modal" id="closeScheduleBtn">✕</button>
-      <h2>Agendar Consulta</h2>
-      <div class="schedule-form">
-        <div class="form-group">
-          <label for="clientName">Seu Nome:</label>
-          <input type="text" id="clientName" placeholder="Digite seu nome">
-        </div>
-        <div class="form-group">
-          <label for="clientEmail">Email:</label>
-          <input type="email" id="clientEmail" placeholder="seu@email.com">
-        </div>
-        <div class="form-group">
-          <label for="clientPhone">Telefone/WhatsApp:</label>
-          <input type="tel" id="clientPhone" placeholder="(19) 99750-5260">
-        </div>
-        <div class="form-group">
-          <label for="calendarInput">Selecione a Data:</label>
-          <input type="date" id="calendarInput" onchange="updateAvailableTimes()">
-          <small id="availableInfo" style="color: #666; margin-top: 0.3rem; font-size: 0.85rem;"></small>
-        </div>
-        <div class="form-group">
-          <label for="timeInput">Selecione o Horário:</label>
-          <select id="timeInput">
-            <option value="">-- Escolha um horário --</option>
-            <optgroup label="Manhã (08:00 - 11:00)">
-              <option value="08:00">08:00</option>
-              <option value="08:30">08:30</option>
-              <option value="09:00">09:00</option>
-              <option value="09:30">09:30</option>
-              <option value="10:00">10:00</option>
-              <option value="10:30">10:30</option>
-            </optgroup>
-            <optgroup label="Tarde (13:00 - 18:00)">
-              <option value="13:00">13:00</option>
-              <option value="13:30">13:30</option>
-              <option value="14:00">14:00</option>
-              <option value="14:30">14:30</option>
-              <option value="15:00">15:00</option>
-              <option value="15:30">15:30</option>
-              <option value="16:00">16:00</option>
-              <option value="16:30">16:30</option>
-              <option value="17:00">17:00</option>
-              <option value="17:30">17:30</option>
-            </optgroup>
-          </select>
-          <small id="bookedTimes" style="color: #e91e63; margin-top: 0.3rem; font-size: 0.85rem;"></small>
-        </div>
-        <button class="btn" id="confirmScheduleBtn">Agendar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="clientLoginModal">
-    <div class="modal-content">
-      <button class="close-modal" id="closeClientLoginBtn">✕</button>
-      <h2>Área do Cliente</h2>
-      <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Digite seu número de telefone para visualizar seu agendamento</p>
-      <div class="login-form">
-        <div class="form-group">
-          <label for="clientPhoneLogin">Telefone:</label>
-          <input type="tel" id="clientPhoneLogin" placeholder="(19) 99750-5260">
-        </div>
-        <button class="btn" id="validateClientBtn">Acessar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="adminLoginModal">
-    <div class="modal-content">
-      <button class="close-modal" id="closeAdminLoginBtn">✕</button>
-      <h2>Área do Proprietário</h2>
-      <div class="login-form">
-        <div class="form-group">
-          <label for="adminPassword">Senha:</label>
-          <input type="password" id="adminPassword" placeholder="Digite a senha">
-        </div>
-        <button class="btn" id="validateAdminBtn">Entrar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="clientSchedulesModal">
-    <div class="modal-content admin-modal">
-      <button class="close-modal" id="closeClientSchedulesBtn">✕</button>
-      <h2>Meus Agendamentos</h2>
-      <button class="btn-logout" id="logoutClientBtn">Sair</button>
-      <div class="schedules-list" id="clientSchedulesList">
-        <p class="no-schedules">Nenhum agendamento encontrado.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="adminModal">
-    <div class="modal-content admin-modal">
-      <button class="close-modal" id="closeAdminBtn">✕</button>
-      <h2>Agenda de Consultas - Admin</h2>
-      <p style="font-size: 0.85rem; color: #666; margin-bottom: 1rem;">Visualização completa de todos os agendamentos</p>
-      <button class="btn-logout" id="logoutAdminBtn">Sair</button>
-      <div class="schedules-list" id="schedulesList">
-        <p class="no-schedules">Nenhum agendamento realizado.</p>
-      </div>
-      <button class="btn-delete-all" id="clearAllBtn">Limpar Agenda</button>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="modalOverlay"></div>
-
-  <footer class="footer">
-    <div class="container">
-      <p> 2026 Franciele Silva | Psicóloga Online</p>
-    </div>
+  <footer>
+    <p>&copy; 2026 Franciele Silva - Psicóloga Online. Todos os direitos reservados.</p>
   </footer>
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-// ========== GLOBAL VARIABLES ==========
-let db = null;
-let isReady = false;
-const ADMIN_PASSWORD = "admin123";
-
-// ========== HELPER FUNCTIONS ==========
-function el(id) { return document.getElementById(id); }
-
-async function waitForSupabase() {
-  let attempts = 0;
-  while (!isReady && attempts < 30) {
-    await new Promise(r => setTimeout(r, 100));
-    attempts++;
-  }
-  if (!isReady || !db) throw new Error("Supabase não inicializou");
-  return db;
-}
-
-// ========== INITIALIZE SUPABASE ==========
-async function initSupabase() {
-  try {
-    let attempts = 0;
-    while (typeof supabase === 'undefined' && attempts < 50) {
-      await new Promise(r => setTimeout(r, 100));
-      attempts++;
-    }
-    if (typeof supabase === 'undefined') throw new Error("Supabase CDN não carregou");
-    const db_instance = supabase.createClient(
-      "https://dpobhypdzgorabjlkppv.supabase.co",
-      "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs"
-    );
-    db = db_instance;
-    isReady = true;
-    console.log("✅ Supabase pronto!");
-  } catch (e) {
-    console.error("❌ Erro Supabase:", e);
-  }
-}
-
-// Initialize immediately
-initSupabase();
-
-// ========== UI FUNCTIONS ==========
-function toggleSidebar() {
-  const s = el("sidebar");
-  if (!s) return;
-  s.classList.toggle("collapsed");
-  document.querySelector("main")?.classList.toggle("sidebar-collapsed");
-  document.querySelector(".footer")?.classList.toggle("sidebar-collapsed");
-  document.querySelector(".topbar")?.classList.toggle("sidebar-collapsed");
-}
-
-function clearCache() {
-  sessionStorage.clear();
-  alert("✅ Sessão limpa!");
-  location.reload();
-}
-
-function closeAllModals() {
-  ["scheduleModal", "clientLoginModal", "adminLoginModal", "clientSchedulesModal", "adminModal"].forEach(id => {
-    const m = el(id);
-    if (m) {
-      m.classList.remove("active");
-    }
-  });
-  const o = el("modalOverlay");
-  if (o) {
-    o.classList.remove("active");
-  }
-}
-
-function openScheduleModal() {
-  const m = el("scheduleModal");
-  const o = el("modalOverlay");
-  if (!m || !o) return;
-  m.classList.add("active");
-  o.classList.add("active");
-  const today = new Date().toISOString().split("T")[0];
-  const cal = el("calendarInput");
-  if (cal) {
-    cal.min = today;
-    cal.value = today;
-    updateAvailableTimes();
-  }
-}
-
-function closeScheduleModal() {
-  el("scheduleModal")?.classList.remove("active");
-  el("modalOverlay")?.classList.remove("active");
-}
-
-function openClientLoginModal() {
-  const m = el("clientLoginModal");
-  const o = el("modalOverlay");
-  if (m && o) {
-    m.classList.add("active");
-    o.classList.add("active");
-  }
-}
-
-function closeClientLoginModal() {
-  el("clientLoginModal")?.classList.remove("active");
-  el("modalOverlay")?.classList.remove("active");
-}
-
-function openClientSchedulesModal() {
-  const m = el("clientSchedulesModal");
-  const o = el("modalOverlay");
-  if (m && o) {
-    m.classList.add("active");
-    o.classList.add("active");
-  }
-}
-
-function closeClientSchedulesModal() {
-  el("clientSchedulesModal")?.classList.remove("active");
-  el("modalOverlay")?.classList.remove("active");
-}
-
-function openAdminLoginModal() {
-  const m = el("adminLoginModal");
-  const o = el("modalOverlay");
-  if (m && o) {
-    m.classList.add("active");
-    o.classList.add("active");
-  }
-}
-
-function closeAdminLoginModal() {
-  el("adminLoginModal")?.classList.remove("active");
-  el("modalOverlay")?.classList.remove("active");
-}
-
-function openAdminModal() {
-  const m = el("adminModal");
-  const o = el("modalOverlay");
-  if (m && o) {
-    m.classList.add("active");
-    o.classList.add("active");
-  }
-}
-
-function closeAdminModal() {
-  el("adminModal")?.classList.remove("active");
-  el("modalOverlay")?.classList.remove("active");
-}
-
-// ========== BOOKING FUNCTIONS ==========
-async function getBookedTimes(date) {
-  try {
-    const database = await waitForSupabase();
-    const { data, error } = await database.from("agendamentos").select("time").eq("date", date);
-    if (error) console.error("Erro:", error);
-    return data ? data.map(s => s.time).sort() : [];
-  } catch (e) {
-    console.error("Erro getBookedTimes:", e);
-    return [];
-  }
-}
-
-async function updateAvailableTimes() {
-  const cal = el("calendarInput");
-  const ts = el("timeInput");
-  if (!cal || !ts) return;
-  const date = cal.value;
-  if (!date) {
-    el("bookedTimes")?.textContent && (el("bookedTimes").textContent = "");
-    el("availableInfo")?.textContent && (el("availableInfo").textContent = "");
-    return;
-  }
-  const booked = await getBookedTimes(date);
-  let disabled = 0;
-  Array.from(ts.options).forEach(opt => {
-    if (opt.value) {
-      const isBooked = booked.includes(opt.value);
-      opt.disabled = isBooked;
-      opt.textContent = isBooked ? `${opt.value} (INDISPONÍVEL)` : opt.value;
-      if (isBooked) disabled++;
-    }
-  });
-  const total = Array.from(ts.options).filter(o => o.value).length;
-  const avail = el("availableInfo");
-  if (avail) avail.textContent = `✅ ${total - disabled} horários disponíveis`;
-}
-
-async function confirmSchedule() {
-  const name = el("clientName")?.value.trim() || "";
-  const email = el("clientEmail")?.value.trim() || "";
-  const phone = el("clientPhone")?.value.trim() || "";
-  const date = el("calendarInput")?.value || "";
-  const time = el("timeInput")?.value || "";
-
-  if (!name || !email || !phone || !date || !time) {
-    alert("Preencha todos os campos!");
-    return;
-  }
-  if (!email.includes("@")) {
-    alert("Email inválido!");
-    return;
-  }
-  try {
-    const database = await waitForSupabase();
-    const { data: exist } = await database.from("agendamentos").select("id").eq("date", date).eq("time", time);
-    if (exist?.length > 0) {
-      alert("❌ Horário já marcado!");
-      return;
-    }
-    const { error } = await database.from("agendamentos").insert([{ name, email, phone, date, time }]);
-    if (error) throw error;
-    el("clientName").value = "";
-    el("clientEmail").value = "";
-    el("clientPhone").value = "";
-    el("calendarInput").value = "";
-    el("timeInput").value = "";
-    closeScheduleModal();
-    alert(`✅ Agendado!\n📅 ${new Date(date).toLocaleDateString("pt-BR")}\n⏰ ${time}`);
-  } catch (e) {
-    console.error("Erro:", e);
-    alert("❌ Erro ao agendar");
-  }
-}
-
-// ========== CLIENT AREA ==========
-function validateClientLogin() {
-  const phone = el("clientPhoneLogin")?.value.trim() || "";
-  if (!phone) {
-    alert("Digite seu telefone!");
-    return;
-  }
-  sessionStorage.setItem("clientPhone", phone);
-  closeClientLoginModal();
-  setTimeout(() => {
-    openClientSchedulesModal();
-    showClientSchedules();
-  }, 100);
-}
-
-function logoutClient() {
-  sessionStorage.removeItem("clientPhone");
-  closeClientSchedulesModal();
-}
-
-async function showClientSchedules() {
-  const phone = sessionStorage.getItem("clientPhone");
-  if (!phone) {
-    alert("Acesso negado!");
-    return;
-  }
-  try {
-    const database = await waitForSupabase();
-    const { data, error } = await database.from("agendamentos").select("*").eq("phone", phone).order("date", { ascending: true });
-    if (error) throw error;
-    const list = el("clientSchedulesList");
-    if (!list) return;
-    if (!data || data.length === 0) {
-      list.innerHTML = '<p class="no-schedules">Você não possui agendamentos.</p>';
-      return;
-    }
-    list.innerHTML = "";
-    data.forEach(s => {
-      const item = document.createElement("div");
-      item.className = "schedule-item";
-      item.innerHTML = `
-        <p><strong>Data:</strong> ${new Date(s.date).toLocaleDateString("pt-BR")}</p>
-        <p><strong>Horário:</strong> ${s.time}</p>
-        <p><strong>Agendado:</strong> ${new Date(s.created_at).toLocaleString("pt-BR")}</p>
-      `;
-      list.appendChild(item);
-    });
-  } catch (e) {
-    console.error("Erro:", e);
-    alert("❌ Erro ao carregar");
-  }
-}
-
-// ========== ADMIN AREA ==========
-function validateAdminLogin() {
-  const pass = el("adminPassword")?.value || "";
-  if (pass === ADMIN_PASSWORD) {
-    sessionStorage.setItem("adminLoggedIn", "true");
-    closeAdminLoginModal();
-    setTimeout(() => {
-      openAdminModal();
-      showAdminSchedules();
-    }, 100);
-  } else {
-    alert("❌ Senha incorreta!");
-  }
-}
-
-function logoutAdmin() {
-  sessionStorage.removeItem("adminLoggedIn");
-  closeAdminModal();
-}
-
-async function showAdminSchedules() {
-  if (!sessionStorage.getItem("adminLoggedIn")) {
-    alert("Acesso negado!");
-    return;
-  }
-  try {
-    const database = await waitForSupabase();
-    const { data, error } = await database.from("agendamentos").select("*").order("date", { ascending: true });
-    if (error) throw error;
-    const list = el("schedulesList");
-    if (!list) return;
-    if (!data || data.length === 0) {
-      list.innerHTML = '<p class="no-schedules">Nenhum agendamento.</p>';
-      return;
-    }
-    list.innerHTML = "";
-    data.forEach(s => {
-      const item = document.createElement("div");
-      item.className = "schedule-item";
-      item.innerHTML = `
-        <p><strong>Cliente:</strong> ${s.name}</p>
-        <p><strong>Email:</strong> ${s.email}</p>
-        <p><strong>Telefone:</strong> ${s.phone}</p>
-        <p><strong>Data:</strong> ${new Date(s.date).toLocaleDateString("pt-BR")}</p>
-        <p><strong>Horário:</strong> ${s.time}</p>
-        <button class="btn delete-schedule-btn" data-id="${s.id}" style="margin-top: 0.5rem; background: #ff6b6b;">Remover</button>
-      `;
-      list.appendChild(item);
-    });
-  } catch (e) {
-    console.error("Erro:", e);
-    alert("❌ Erro ao carregar");
-  }
-}
-
-async function deleteSchedule(id) {
-  if (!confirm("Remover agendamento?")) return;
-  try {
-    const database = await waitForSupabase();
-    const { error } = await database.from("agendamentos").delete().eq("id", id);
-    if (error) throw error;
-    alert("✅ Deletado!");
-    await showAdminSchedules();
-  } catch (e) {
-    console.error("Erro:", e);
-    alert("❌ Erro ao deletar");
-  }
-}
-
-async function clearAllSchedules() {
-  if (!confirm("Limpar TODA a agenda?")) return;
-  try {
-    const database = await waitForSupabase();
-    const { error } = await database.from("agendamentos").delete().gt("id", 0);
-    if (error) throw error;
-    alert("✅ Agenda limpa!");
-    await showAdminSchedules();
-  } catch (e) {
-    console.error("Erro:", e);
-    alert("❌ Erro ao limpar");
-  }
-}
-
-// ========== EVENT LISTENERS ==========
-el("sidebarToggle")?.addEventListener("click", toggleSidebar);
-el("clearCacheBtn")?.addEventListener("click", clearCache);
-el("scheduleBtn")?.addEventListener("click", openScheduleModal);
-el("closeScheduleBtn")?.addEventListener("click", closeScheduleModal);
-el("confirmScheduleBtn")?.addEventListener("click", confirmSchedule);
-
-el("clientBtn")?.addEventListener("click", openClientLoginModal);
-el("closeClientLoginBtn")?.addEventListener("click", closeClientLoginModal);
-el("validateClientBtn")?.addEventListener("click", validateClientLogin);
-el("closeClientSchedulesBtn")?.addEventListener("click", closeClientSchedulesModal);
-el("logoutClientBtn")?.addEventListener("click", logoutClient);
-
-el("adminBtn")?.addEventListener("click", openAdminLoginModal);
-el("closeAdminLoginBtn")?.addEventListener("click", closeAdminLoginModal);
-el("validateAdminBtn")?.addEventListener("click", validateAdminLogin);
-el("closeAdminBtn")?.addEventListener("click", closeAdminModal);
-el("logoutAdminBtn")?.addEventListener("click", logoutAdmin);
-el("clearAllBtn")?.addEventListener("click", clearAllSchedules);
-
-el("modalOverlay")?.addEventListener("click", closeAllModals);
-
-el("schedulesList")?.addEventListener("click", async (e) => {
-  if (e.target.classList.contains("delete-schedule-btn")) {
-    const id = e.target.dataset.id;
-    if (id) await deleteSchedule(id);
-  }
-});
-
-el("adminSchedulesList")?.addEventListener("click", async (e) => {
-  if (e.target.classList.contains("delete-schedule-btn")) {
-    const id = e.target.dataset.id;
-    if (id) await deleteSchedule(id);
-  }
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeAllModals();
-});
-
-document.querySelectorAll(".modal-content").forEach(m => {
-  m.addEventListener("click", (e) => e.stopPropagation());
-});
-
-console.log("✅ Sistema carregado!");
-  </script>
 </body>
 </html>
