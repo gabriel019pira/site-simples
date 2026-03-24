@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Atualização: 2026-03-23 -->
   <title>Franciele Silva - Psicóloga Online</title>
   <link rel="stylesheet" href="main.css" />
 </head>
@@ -20,25 +19,24 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <h3>Menu</h3>
-      <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Recolher/Expandir">‹</button>
+      <button class="sidebar-toggle" id="sidebarToggle" title="Recolher/Expandir">‹</button>
     </div>
     <nav class="sidebar-menu">
       <a href="#sobre" class="sidebar-link">Sobre</a>
       <a href="#especialidades" class="sidebar-link">Especialidades</a>
       <a href="#atendimento" class="sidebar-link">Atendimento</a>
       <a href="#contato" class="sidebar-link">Contato</a>
-      <button class="btn-clear-cache" onclick="clearCache()">🔄 Limpar Cache</button>
+      <button class="btn-clear-cache" id="clearCacheBtn">🔄 Limpar Cache</button>
     </nav>
   </aside>
 
   <main>
-    <section class="hero">
-    </section>
+    <section class="hero"></section>
 
     <section class="intro container">
       <h2>Terapia online com acolhimento e segurança</h2>
       <p>Agende sua sessão com a psicóloga Franciele Silva. Atendimento humanizado e especial para ansiedade, depressão e autoconhecimento.</p>
-      <a class="btn" href="#" onclick="openScheduleModal()">Agendar Consulta</a>
+      <button class="btn" id="scheduleBtn">Agendar Consulta</button>
     </section>
 
     <section id="sobre" class="sobre container">
@@ -78,16 +76,16 @@
         <p>📱 Instagram: <a href="https://instagram.com/francielesilva_oficial" target="_blank">@francielesilva_oficial</a></p>
       </div>
       <div class="buttons-container">
-        <button class="btn-admin btn-admin-footer" id="clientBtn" onclick="openClientLoginModal()">Área do Cliente</button>
-        <button class="btn-admin btn-admin-footer" id="adminBtn" onclick="openAdminLoginModal()">Área do Proprietário</button>
+        <button class="btn-admin btn-admin-footer" id="clientBtn">Área do Cliente</button>
+        <button class="btn-admin btn-admin-footer" id="adminBtn">Área do Proprietário</button>
       </div>
     </section>
   </main>
 
-  <!-- Modal de Agendamento -->
+  <!-- MODAIS -->
   <div class="modal" id="scheduleModal">
     <div class="modal-content">
-      <button class="close-modal" onclick="closeScheduleModal()">✕</button>
+      <button class="close-modal" id="closeScheduleBtn">✕</button>
       <h2>Agendar Consulta</h2>
       <div class="schedule-form">
         <div class="form-group">
@@ -104,7 +102,7 @@
         </div>
         <div class="form-group">
           <label for="calendarInput">Selecione a Data:</label>
-          <input type="date" id="calendarInput" min="" onchange="updateAvailableTimes()">
+          <input type="date" id="calendarInput" onchange="updateAvailableTimes()">
           <small id="availableInfo" style="color: #666; margin-top: 0.3rem; font-size: 0.85rem;"></small>
         </div>
         <div class="form-group">
@@ -134,15 +132,14 @@
           </select>
           <small id="bookedTimes" style="color: #e91e63; margin-top: 0.3rem; font-size: 0.85rem;"></small>
         </div>
-        <button class="btn" onclick="confirmSchedule()">Agendar</button>
+        <button class="btn" id="confirmScheduleBtn">Agendar</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal de Login do Cliente -->
   <div class="modal" id="clientLoginModal">
     <div class="modal-content">
-      <button class="close-modal" onclick="closeClientLoginModal()">✕</button>
+      <button class="close-modal" id="closeClientLoginBtn">✕</button>
       <h2>Área do Cliente</h2>
       <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Digite seu número de telefone para visualizar seu agendamento</p>
       <div class="login-form">
@@ -150,54 +147,50 @@
           <label for="clientPhoneLogin">Telefone:</label>
           <input type="tel" id="clientPhoneLogin" placeholder="(19) 99750-5260">
         </div>
-        <button class="btn" onclick="validateClientLogin()">Acessar</button>
+        <button class="btn" id="validateClientBtn">Acessar</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal de Login do Proprietário -->
   <div class="modal" id="adminLoginModal">
     <div class="modal-content">
-      <button class="close-modal" onclick="closeAdminLoginModal()">✕</button>
+      <button class="close-modal" id="closeAdminLoginBtn">✕</button>
       <h2>Área do Proprietário</h2>
       <div class="login-form">
         <div class="form-group">
           <label for="adminPassword">Senha:</label>
           <input type="password" id="adminPassword" placeholder="Digite a senha">
         </div>
-        <button class="btn" onclick="validateAdminLogin()">Entrar</button>
+        <button class="btn" id="validateAdminBtn">Entrar</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal de Visualização de Agendamentos do Cliente -->
   <div class="modal" id="clientSchedulesModal">
     <div class="modal-content admin-modal">
-      <button class="close-modal" onclick="closeClientSchedulesModal()">✕</button>
+      <button class="close-modal" id="closeClientSchedulesBtn">✕</button>
       <h2>Meus Agendamentos</h2>
-      <button class="btn-logout" onclick="logoutClient()">Sair</button>
+      <button class="btn-logout" id="logoutClientBtn">Sair</button>
       <div class="schedules-list" id="clientSchedulesList">
         <p class="no-schedules">Nenhum agendamento encontrado.</p>
       </div>
     </div>
   </div>
 
-  <!-- Modal de Área Administrativa -->
   <div class="modal" id="adminModal">
     <div class="modal-content admin-modal">
-      <button class="close-modal" onclick="closeAdminModal()">✕</button>
+      <button class="close-modal" id="closeAdminBtn">✕</button>
       <h2>Agenda de Consultas - Admin</h2>
       <p style="font-size: 0.85rem; color: #666; margin-bottom: 1rem;">Visualização completa de todos os agendamentos</p>
-      <button class="btn-logout" onclick="logoutAdmin()">Sair</button>
+      <button class="btn-logout" id="logoutAdminBtn">Sair</button>
       <div class="schedules-list" id="schedulesList">
         <p class="no-schedules">Nenhum agendamento realizado.</p>
       </div>
-      <button class="btn-delete-all" onclick="clearAllSchedules()">Limpar Agenda</button>
+      <button class="btn-delete-all" id="clearAllBtn">Limpar Agenda</button>
     </div>
   </div>
 
-  <!-- Overlay para modais -->
-  <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
+  <div class="modal-overlay" id="modalOverlay"></div>
 
   <footer class="footer">
     <div class="container">
@@ -207,64 +200,54 @@
 
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
   <script>
-// ========== VARIÁVEIS GLOBAIS ==========
+// ========== GLOBAL VARIABLES ==========
 let db = null;
 let isReady = false;
 const ADMIN_PASSWORD = "admin123";
 
-// Inicializar Supabase corretamente
-async function initSupabase() {
-  try {
-    // Aguardar Supabase carregar
-    let attempts = 0;
-    while (typeof supabase === 'undefined' && attempts < 50) {
-      await new Promise(r => setTimeout(r, 100));
-      attempts++;
-    }
-    
-    if (typeof supabase === 'undefined') {
-      throw new Error("Supabase CDN não carregou");
-    }
-    
-    const SUPABASE_URL = "https://dpobhypdzgorabjlkppv.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs";
-    db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    isReady = true;
-    console.log("✅ Supabase pronto!");
-  } catch (e) {
-    console.error("❌ Erro ao inicializar Supabase:", e);
-    db = null;
-    isReady = false;
-  }
-}
+// ========== HELPER FUNCTIONS ==========
+function el(id) { return document.getElementById(id); }
 
-// Iniciar imediatamente
-initSupabase();
-
-// ========== FUNÇÕES AUXILIARES ==========
-function getElement(id) {
-  return document.getElementById(id);
-}
-
-// Aguardar Supabase estar pronto
 async function waitForSupabase() {
   let attempts = 0;
   while (!isReady && attempts < 30) {
     await new Promise(r => setTimeout(r, 100));
     attempts++;
   }
-  if (!isReady || !db) {
-    throw new Error("Supabase não inicializou corretamente");
-  }
+  if (!isReady || !db) throw new Error("Supabase não inicializou");
   return db;
 }
 
+// ========== INITIALIZE SUPABASE ==========
+async function initSupabase() {
+  try {
+    let attempts = 0;
+    while (typeof supabase === 'undefined' && attempts < 50) {
+      await new Promise(r => setTimeout(r, 100));
+      attempts++;
+    }
+    if (typeof supabase === 'undefined') throw new Error("Supabase CDN não carregou");
+    const db_instance = supabase.createClient(
+      "https://dpobhypdzgorabjlkppv.supabase.co",
+      "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs"
+    );
+    db = db_instance;
+    isReady = true;
+    console.log("✅ Supabase pronto!");
+  } catch (e) {
+    console.error("❌ Erro Supabase:", e);
+  }
+}
+
+// Initialize immediately
+initSupabase();
+
+// ========== UI FUNCTIONS ==========
 function toggleSidebar() {
-  const sidebar = getElement("sidebar");
-  if (!sidebar) return;
-  sidebar.classList.toggle("collapsed");
+  const s = el("sidebar");
+  if (!s) return;
+  s.classList.toggle("collapsed");
   document.querySelector("main")?.classList.toggle("sidebar-collapsed");
   document.querySelector(".footer")?.classList.toggle("sidebar-collapsed");
   document.querySelector(".topbar")?.classList.toggle("sidebar-collapsed");
@@ -272,31 +255,27 @@ function toggleSidebar() {
 
 function clearCache() {
   sessionStorage.clear();
-  alert("✅ Sessão limpa com sucesso! A página será recarregada.");
+  alert("✅ Sessão limpa!");
   location.reload();
 }
 
 function closeAllModals() {
-  const modals = ["scheduleModal", "clientLoginModal", "adminLoginModal", "clientSchedulesModal", "adminModal"];
-  modals.forEach(id => {
-    const modal = getElement(id);
-    if (modal) modal.classList.remove("active");
+  ["scheduleModal", "clientLoginModal", "adminLoginModal", "clientSchedulesModal", "adminModal"].forEach(id => {
+    const m = el(id);
+    if (m) m.classList.remove("active");
   });
-  const overlay = getElement("modalOverlay");
-  if (overlay) overlay.classList.remove("active");
-  const sidebar = getElement("sidebar");
-  if (sidebar) sidebar.classList.remove("collapsed");
+  const o = el("modalOverlay");
+  if (o) o.classList.remove("active");
 }
 
-// ========== MODAIS ==========
 function openScheduleModal() {
-  const modal = getElement("scheduleModal");
-  const overlay = getElement("modalOverlay");
-  if (!modal || !overlay) return;
-  modal.classList.add("active");
-  overlay.classList.add("active");
+  const m = el("scheduleModal");
+  const o = el("modalOverlay");
+  if (!m || !o) return;
+  m.classList.add("active");
+  o.classList.add("active");
   const today = new Date().toISOString().split("T")[0];
-  const cal = getElement("calendarInput");
+  const cal = el("calendarInput");
   if (cal) {
     cal.min = today;
     cal.value = today;
@@ -305,136 +284,146 @@ function openScheduleModal() {
 }
 
 function closeScheduleModal() {
-  const modal = getElement("scheduleModal");
-  const overlay = getElement("modalOverlay");
-  if (modal) modal.classList.remove("active");
-  if (overlay) overlay.classList.remove("active");
+  el("scheduleModal")?.classList.remove("active");
+  el("modalOverlay")?.classList.remove("active");
 }
 
 function openClientLoginModal() {
-  console.log("openClientLoginModal chamada");
-  const modal = getElement("clientLoginModal");
-  const overlay = getElement("modalOverlay");
-  if (!modal || !overlay) {
-    console.error("Modal não encontrada");
-    return;
+  const m = el("clientLoginModal");
+  const o = el("modalOverlay");
+  if (m && o) {
+    m.classList.add("active");
+    o.classList.add("active");
   }
-  modal.classList.add("active");
-  overlay.classList.add("active");
 }
 
 function closeClientLoginModal() {
-  const modal = getElement("clientLoginModal");
-  const overlay = getElement("modalOverlay");
-  if (modal) modal.classList.remove("active");
-  if (overlay) overlay.classList.remove("active");
+  el("clientLoginModal")?.classList.remove("active");
+  el("modalOverlay")?.classList.remove("active");
 }
 
 function openClientSchedulesModal() {
-  const modal = getElement("clientSchedulesModal");
-  const overlay = getElement("modalOverlay");
-  if (!modal || !overlay) return;
-  modal.classList.add("active");
-  overlay.classList.add("active");
+  const m = el("clientSchedulesModal");
+  const o = el("modalOverlay");
+  if (m && o) {
+    m.classList.add("active");
+    o.classList.add("active");
+  }
 }
 
 function closeClientSchedulesModal() {
-  const modal = getElement("clientSchedulesModal");
-  const overlay = getElement("modalOverlay");
-  if (modal) modal.classList.remove("active");
-  if (overlay) overlay.classList.remove("active");
+  el("clientSchedulesModal")?.classList.remove("active");
+  el("modalOverlay")?.classList.remove("active");
 }
 
 function openAdminLoginModal() {
-  console.log("openAdminLoginModal chamada");
-  const modal = getElement("adminLoginModal");
-  const overlay = getElement("modalOverlay");
-  if (!modal || !overlay) {
-    console.error("Modal não encontrada");
-    return;
+  const m = el("adminLoginModal");
+  const o = el("modalOverlay");
+  if (m && o) {
+    m.classList.add("active");
+    o.classList.add("active");
   }
-  modal.classList.add("active");
-  overlay.classList.add("active");
 }
 
 function closeAdminLoginModal() {
-  const modal = getElement("adminLoginModal");
-  const overlay = getElement("modalOverlay");
-  if (modal) modal.classList.remove("active");
-  if (overlay) overlay.classList.remove("active");
+  el("adminLoginModal")?.classList.remove("active");
+  el("modalOverlay")?.classList.remove("active");
 }
 
 function openAdminModal() {
-  const modal = getElement("adminModal");
-  const overlay = getElement("modalOverlay");
-  if (!modal || !overlay) return;
-  modal.classList.add("active");
-  overlay.classList.add("active");
+  const m = el("adminModal");
+  const o = el("modalOverlay");
+  if (m && o) {
+    m.classList.add("active");
+    o.classList.add("active");
+  }
 }
 
 function closeAdminModal() {
-  const modal = getElement("adminModal");
-  const overlay = getElement("modalOverlay");
-  if (modal) modal.classList.remove("active");
-  if (overlay) overlay.classList.remove("active");
+  el("adminModal")?.classList.remove("active");
+  el("modalOverlay")?.classList.remove("active");
 }
 
-// ========== HORÁRIOS ==========
+// ========== BOOKING FUNCTIONS ==========
 async function getBookedTimes(date) {
   try {
     const database = await waitForSupabase();
     const { data, error } = await database.from("agendamentos").select("time").eq("date", date);
-    if (error) {
-      console.error("Erro ao buscar horários:", error);
-      return [];
-    }
+    if (error) console.error("Erro:", error);
     return data ? data.map(s => s.time).sort() : [];
   } catch (e) {
-    console.error("Erro em getBookedTimes:", e);
+    console.error("Erro getBookedTimes:", e);
     return [];
   }
 }
 
 async function updateAvailableTimes() {
-  const cal = getElement("calendarInput");
-  const timeSelect = getElement("timeInput");
-  const bookedInfo = getElement("bookedTimes");
-  const availInfo = getElement("availableInfo");
-  
-  if (!cal || !timeSelect) return;
+  const cal = el("calendarInput");
+  const ts = el("timeInput");
+  if (!cal || !ts) return;
   const date = cal.value;
   if (!date) {
-    if (bookedInfo) bookedInfo.textContent = "";
-    if (availInfo) availInfo.textContent = "";
-    Array.from(timeSelect.options).forEach(opt => {
-      if (opt.value) opt.disabled = false;
-    });
+    el("bookedTimes")?.textContent && (el("bookedTimes").textContent = "");
+    el("availableInfo")?.textContent && (el("availableInfo").textContent = "");
     return;
   }
   const booked = await getBookedTimes(date);
-  let disabledCount = 0;
-  Array.from(timeSelect.options).forEach(opt => {
+  let disabled = 0;
+  Array.from(ts.options).forEach(opt => {
     if (opt.value) {
       const isBooked = booked.includes(opt.value);
       opt.disabled = isBooked;
       opt.textContent = isBooked ? `${opt.value} (INDISPONÍVEL)` : opt.value;
-      if (isBooked) disabledCount++;
+      if (isBooked) disabled++;
     }
   });
-  const total = Array.from(timeSelect.options).filter(o => o.value).length;
-  const available = total - disabledCount;
-  if (bookedInfo) bookedInfo.textContent = disabledCount > 0 ? `⏳ Horários marcados: ${booked.join(", ")}` : "";
-  if (availInfo) availInfo.textContent = `✅ ${available} horários disponíveis`;
-  if (timeSelect.value && booked.includes(timeSelect.value)) timeSelect.value = "";
+  const total = Array.from(ts.options).filter(o => o.value).length;
+  const avail = el("availableInfo");
+  if (avail) avail.textContent = `✅ ${total - disabled} horários disponíveis`;
 }
 
-// ========== CLIENTE ==========
+async function confirmSchedule() {
+  const name = el("clientName")?.value.trim() || "";
+  const email = el("clientEmail")?.value.trim() || "";
+  const phone = el("clientPhone")?.value.trim() || "";
+  const date = el("calendarInput")?.value || "";
+  const time = el("timeInput")?.value || "";
+
+  if (!name || !email || !phone || !date || !time) {
+    alert("Preencha todos os campos!");
+    return;
+  }
+  if (!email.includes("@")) {
+    alert("Email inválido!");
+    return;
+  }
+  try {
+    const database = await waitForSupabase();
+    const { data: exist } = await database.from("agendamentos").select("id").eq("date", date).eq("time", time);
+    if (exist?.length > 0) {
+      alert("❌ Horário já marcado!");
+      return;
+    }
+    const { error } = await database.from("agendamentos").insert([{ name, email, phone, date, time }]);
+    if (error) throw error;
+    el("clientName").value = "";
+    el("clientEmail").value = "";
+    el("clientPhone").value = "";
+    el("calendarInput").value = "";
+    el("timeInput").value = "";
+    closeScheduleModal();
+    alert(`✅ Agendado!\n📅 ${new Date(date).toLocaleDateString("pt-BR")}\n⏰ ${time}`);
+  } catch (e) {
+    console.error("Erro:", e);
+    alert("❌ Erro ao agendar");
+  }
+}
+
+// ========== CLIENT AREA ==========
 function validateClientLogin() {
-  const phoneInput = getElement("clientPhoneLogin");
-  if (!phoneInput) return;
-  const phone = phoneInput.value.trim();
+  const phone = el("clientPhoneLogin")?.value.trim() || "";
   if (!phone) {
-    alert("Por favor, digite seu telefone!");
+    alert("Digite seu telefone!");
     return;
   }
   sessionStorage.setItem("clientPhone", phone);
@@ -460,37 +449,33 @@ async function showClientSchedules() {
     const database = await waitForSupabase();
     const { data, error } = await database.from("agendamentos").select("*").eq("phone", phone).order("date", { ascending: true });
     if (error) throw error;
-    const list = getElement("clientSchedulesList");
+    const list = el("clientSchedulesList");
     if (!list) return;
     if (!data || data.length === 0) {
       list.innerHTML = '<p class="no-schedules">Você não possui agendamentos.</p>';
       return;
     }
     list.innerHTML = "";
-    data.forEach(schedule => {
-      const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
+    data.forEach(s => {
       const item = document.createElement("div");
       item.className = "schedule-item";
       item.innerHTML = `
-        <p><strong>Data:</strong> ${formatDate}</p>
-        <p><strong>Horário:</strong> ${schedule.time}</p>
-        <p><strong>Agendado em:</strong> ${new Date(schedule.created_at).toLocaleString("pt-BR")}</p>
-        <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">Para cancelar, entre em contato conosco.</p>
+        <p><strong>Data:</strong> ${new Date(s.date).toLocaleDateString("pt-BR")}</p>
+        <p><strong>Horário:</strong> ${s.time}</p>
+        <p><strong>Agendado:</strong> ${new Date(s.created_at).toLocaleString("pt-BR")}</p>
       `;
       list.appendChild(item);
     });
   } catch (e) {
-    console.error("Erro em showClientSchedules:", e);
-    alert("❌ Erro ao buscar agendamentos");
+    console.error("Erro:", e);
+    alert("❌ Erro ao carregar");
   }
 }
 
-// ========== ADMIN ==========
+// ========== ADMIN AREA ==========
 function validateAdminLogin() {
-  const passInput = getElement("adminPassword");
-  if (!passInput) return;
-  const password = passInput.value;
-  if (password === ADMIN_PASSWORD) {
+  const pass = el("adminPassword")?.value || "";
+  if (pass === ADMIN_PASSWORD) {
     sessionStorage.setItem("adminLoggedIn", "true");
     closeAdminLoginModal();
     setTimeout(() => {
@@ -516,134 +501,91 @@ async function showAdminSchedules() {
     const database = await waitForSupabase();
     const { data, error } = await database.from("agendamentos").select("*").order("date", { ascending: true });
     if (error) throw error;
-    const list = getElement("schedulesList");
+    const list = el("schedulesList");
     if (!list) return;
     if (!data || data.length === 0) {
-      list.innerHTML = '<p class="no-schedules">Nenhum agendamento realizado.</p>';
+      list.innerHTML = '<p class="no-schedules">Nenhum agendamento.</p>';
       return;
     }
     list.innerHTML = "";
-    data.forEach(schedule => {
-      const formatDate = new Date(schedule.date).toLocaleDateString("pt-BR");
+    data.forEach(s => {
       const item = document.createElement("div");
       item.className = "schedule-item";
       item.innerHTML = `
-        <p><strong>Cliente:</strong> ${schedule.name}</p>
-        <p><strong>Email:</strong> ${schedule.email}</p>
-        <p><strong>Telefone:</strong> ${schedule.phone}</p>
-        <p><strong>Data:</strong> ${formatDate}</p>
-        <p><strong>Horário:</strong> ${schedule.time}</p>
-        <p><strong>Agendado em:</strong> ${new Date(schedule.created_at).toLocaleString("pt-BR")}</p>
-        <button class="btn" style="margin-top: 0.5rem; background: #ff6b6b;" onclick="deleteSchedule(${schedule.id})">Remover</button>
+        <p><strong>Cliente:</strong> ${s.name}</p>
+        <p><strong>Email:</strong> ${s.email}</p>
+        <p><strong>Telefone:</strong> ${s.phone}</p>
+        <p><strong>Data:</strong> ${new Date(s.date).toLocaleDateString("pt-BR")}</p>
+        <p><strong>Horário:</strong> ${s.time}</p>
+        <button class="btn" style="margin-top: 0.5rem; background: #ff6b6b;" onclick="deleteSchedule(${s.id})">Remover</button>
       `;
       list.appendChild(item);
     });
   } catch (e) {
-    console.error("Erro em showAdminSchedules:", e);
-    alert("❌ Erro ao buscar agendamentos");
+    console.error("Erro:", e);
+    alert("❌ Erro ao carregar");
   }
 }
 
-// ========== AGENDAMENTO ==========
-async function confirmSchedule() {
-  const nameInput = getElement("clientName");
-  const emailInput = getElement("clientEmail");
-  const phoneInput = getElement("clientPhone");
-  const calInput = getElement("calendarInput");
-  const timeInput = getElement("timeInput");
-  
-  if (!nameInput || !emailInput || !phoneInput || !calInput || !timeInput) return;
-  
-  const name = nameInput.value.trim();
-  const email = emailInput.value.trim();
-  const phone = phoneInput.value.trim();
-  const date = calInput.value;
-  const time = timeInput.value;
-  
-  if (!name || !email || !phone || !date || !time) {
-    alert("Por favor, preencha todos os campos!");
-    return;
-  }
-  
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    alert("Por favor, insira um email válido!");
-    return;
-  }
-  
-  try {
-    const database = await waitForSupabase();
-    const { data: existing, error: checkError } = await database.from("agendamentos").select("id").eq("date", date).eq("time", time);
-    if (checkError) throw checkError;
-    if (existing && existing.length > 0) {
-      alert("❌ Este horário já foi marcado! Escolha outro.");
-      return;
-    }
-    const { error } = await database.from("agendamentos").insert([{ name, email, phone, date, time }]);
-    if (error) throw error;
-    nameInput.value = "";
-    emailInput.value = "";
-    phoneInput.value = "";
-    calInput.value = "";
-    timeInput.value = "";
-    closeScheduleModal();
-    const formatDate = new Date(date).toLocaleDateString("pt-BR");
-    alert(`✅ Agendamento realizado com sucesso!\n\n📅 Data: ${formatDate}\n⏰ Horário: ${time}\n👤 Cliente: ${name}`);
-  } catch (error) {
-    console.error("Erro em confirmSchedule:", error);
-    alert("❌ Erro ao criar agendamento. Tente novamente.");
-  }
-}
-
-// ========== GERENCIAR ==========
 async function deleteSchedule(id) {
-  if (!confirm("Tem certeza que deseja remover este agendamento?")) return;
+  if (!confirm("Remover agendamento?")) return;
   try {
     const database = await waitForSupabase();
     const { error } = await database.from("agendamentos").delete().eq("id", id);
     if (error) throw error;
-    alert("✅ Agendamento deletado!");
+    alert("✅ Deletado!");
     await showAdminSchedules();
   } catch (e) {
-    console.error("Erro em deleteSchedule:", e);
-    alert("❌ Erro ao deletar agendamento");
+    console.error("Erro:", e);
+    alert("❌ Erro ao deletar");
   }
 }
 
 async function clearAllSchedules() {
-  if (!confirm("Tem certeza que deseja limpar TODA a agenda? Esta ação não pode ser desfeita!")) return;
+  if (!confirm("Limpar TODA a agenda?")) return;
   try {
     const database = await waitForSupabase();
-    const { data: allSchedules, error: fetchError } = await database.from("agendamentos").select("id");
-    if (fetchError) throw fetchError;
-    const count = allSchedules ? allSchedules.length : 0;
-    if (count > 0) {
-      const { error } = await database.from("agendamentos").delete().gt("id", 0);
-      if (error) throw error;
-    }
-    alert(`✅ ${count} agendamentos foram deletados!`);
+    const { error } = await database.from("agendamentos").delete().gt("id", 0);
+    if (error) throw error;
+    alert("✅ Agenda limpa!");
     await showAdminSchedules();
   } catch (e) {
-    console.error("Erro em clearAllSchedules:", e);
-    alert("❌ Erro ao limpar agendamentos");
+    console.error("Erro:", e);
+    alert("❌ Erro ao limpar");
   }
 }
 
 // ========== EVENT LISTENERS ==========
-const overlay = getElement("modalOverlay");
-if (overlay) {
-  overlay.addEventListener("click", closeAllModals);
-}
+el("sidebarToggle")?.addEventListener("click", toggleSidebar);
+el("clearCacheBtn")?.addEventListener("click", clearCache);
+el("scheduleBtn")?.addEventListener("click", openScheduleModal);
+el("closeScheduleBtn")?.addEventListener("click", closeScheduleModal);
+el("confirmScheduleBtn")?.addEventListener("click", confirmSchedule);
+
+el("clientBtn")?.addEventListener("click", openClientLoginModal);
+el("closeClientLoginBtn")?.addEventListener("click", closeClientLoginModal);
+el("validateClientBtn")?.addEventListener("click", validateClientLogin);
+el("closeClientSchedulesBtn")?.addEventListener("click", closeClientSchedulesModal);
+el("logoutClientBtn")?.addEventListener("click", logoutClient);
+
+el("adminBtn")?.addEventListener("click", openAdminLoginModal);
+el("closeAdminLoginBtn")?.addEventListener("click", closeAdminLoginModal);
+el("validateAdminBtn")?.addEventListener("click", validateAdminLogin);
+el("closeAdminBtn")?.addEventListener("click", closeAdminModal);
+el("logoutAdminBtn")?.addEventListener("click", logoutAdmin);
+el("clearAllBtn")?.addEventListener("click", clearAllSchedules);
+
+el("modalOverlay")?.addEventListener("click", closeAllModals);
+
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeAllModals();
 });
-document.querySelectorAll(".modal-content").forEach(modal => {
-  modal.addEventListener("click", (e) => {
-    e.stopPropagation();
-  });
+
+document.querySelectorAll(".modal-content").forEach(m => {
+  m.addEventListener("click", (e) => e.stopPropagation());
 });
 
-console.log("✅ Sistema completo carregado!");
+console.log("✅ Sistema carregado!");
   </script>
 </body>
 </html>
