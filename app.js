@@ -1,15 +1,38 @@
 // ========== CONFIGURAÇÃO SUPABASE ==========
-const SUPABASE_URL = "https://dpobhypdzgorabjlkppv.supabase.co";
-const SUPABASE_KEY = "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs";
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let db;
+
+// Aguardar Supabase carregar
+function initSupabase() {
+  if (typeof supabase === 'undefined') {
+    console.error("❌ Supabase não carregou!");
+    setTimeout(initSupabase, 500);
+    return;
+  }
+  
+  const SUPABASE_URL = "https://dpobhypdzgorabjlkppv.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_7-rieCzisyK5_WDG5oJ91g_cG4xHvJs";
+  db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  console.log("✅ Supabase inicializado!");
+  initializeApp();
+}
+
+// Chamar ao carregar a página
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSupabase);
+} else {
+  initSupabase();
+}
+
+function initializeApp() {
+  // Inicializar depois que Supabase está pronto
+  console.log("✅ Sistema rodando com Supabase (NUVEM)");
+}
 
 const ADMIN_PASSWORD = "admin123";
 const SCHEDULES_KEY = "schedules";
 const ADMIN_LOGIN_KEY = "adminLoggedIn";
 const CLIENT_LOGIN_KEY = "clientLoggedIn";
 const CLIENT_PHONE_KEY = "clientPhone";
-
-console.log("✅ Sistema rodando com Supabase (NUVEM)");
 
 // DOM Elements
 const sidebar = document.getElementById("sidebar");
