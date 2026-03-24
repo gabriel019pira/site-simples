@@ -517,7 +517,7 @@ async function showAdminSchedules() {
         <p><strong>Telefone:</strong> ${s.phone}</p>
         <p><strong>Data:</strong> ${new Date(s.date).toLocaleDateString("pt-BR")}</p>
         <p><strong>Horário:</strong> ${s.time}</p>
-        <button class="btn" style="margin-top: 0.5rem; background: #ff6b6b;" onclick="deleteSchedule(${s.id})">Remover</button>
+        <button class="btn delete-schedule-btn" data-id="${s.id}" style="margin-top: 0.5rem; background: #ff6b6b;">Remover</button>
       `;
       list.appendChild(item);
     });
@@ -576,6 +576,20 @@ el("logoutAdminBtn")?.addEventListener("click", logoutAdmin);
 el("clearAllBtn")?.addEventListener("click", clearAllSchedules);
 
 el("modalOverlay")?.addEventListener("click", closeAllModals);
+
+el("schedulesList")?.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("delete-schedule-btn")) {
+    const id = e.target.dataset.id;
+    if (id) await deleteSchedule(id);
+  }
+});
+
+el("adminSchedulesList")?.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("delete-schedule-btn")) {
+    const id = e.target.dataset.id;
+    if (id) await deleteSchedule(id);
+  }
+});
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeAllModals();
