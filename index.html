@@ -264,13 +264,11 @@ function closeAllModals() {
     const m = el(id);
     if (m) {
       m.classList.remove("active");
-      m.style.display = "none";
     }
   });
   const o = el("modalOverlay");
   if (o) {
     o.classList.remove("active");
-    o.style.display = "none";
   }
 }
 
@@ -285,8 +283,6 @@ function openScheduleModal() {
   }
   m.classList.add("active");
   o.classList.add("active");
-  m.style.display = "block";
-  o.style.display = "block";
   console.log("✅ Modal aberto, classes adicionadas");
   console.log("Modal display:", window.getComputedStyle(m).display);
   console.log("Overlay display:", window.getComputedStyle(o).display);
@@ -301,8 +297,10 @@ function openScheduleModal() {
 }
 
 function closeScheduleModal() {
+  console.log("🔴 closeScheduleModal chamado");
   el("scheduleModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
+  console.log("✅ Schedule Modal fechado");
 }
 
 function openClientLoginModal() {
@@ -313,8 +311,6 @@ function openClientLoginModal() {
   if (m && o) {
     m.classList.add("active");
     o.classList.add("active");
-    m.style.display = "block";
-    o.style.display = "block";
     console.log("✅ Modal Cliente aberto");
   } else {
     console.error("❌ Modal ou Overlay não encontrado!");
@@ -322,8 +318,10 @@ function openClientLoginModal() {
 }
 
 function closeClientLoginModal() {
+  console.log("🔴 closeClientLoginModal chamado");
   el("clientLoginModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
+  console.log("✅ Client Login Modal fechado");
 }
 
 function openClientSchedulesModal() {
@@ -336,8 +334,10 @@ function openClientSchedulesModal() {
 }
 
 function closeClientSchedulesModal() {
+  console.log("🔴 closeClientSchedulesModal chamado");
   el("clientSchedulesModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
+  console.log("✅ Client Schedules Modal fechado");
 }
 
 function openAdminLoginModal() {
@@ -348,8 +348,6 @@ function openAdminLoginModal() {
   if (m && o) {
     m.classList.add("active");
     o.classList.add("active");
-    m.style.display = "block";
-    o.style.display = "block";
     console.log("✅ Modal Admin aberto");
   } else {
     console.error("❌ Modal ou Overlay não encontrado!");
@@ -357,8 +355,10 @@ function openAdminLoginModal() {
 }
 
 function closeAdminLoginModal() {
+  console.log("🔴 closeAdminLoginModal chamado");
   el("adminLoginModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
+  console.log("✅ Admin Login Modal fechado");
 }
 
 function openAdminModal() {
@@ -371,8 +371,10 @@ function openAdminModal() {
 }
 
 function closeAdminModal() {
+  console.log("🔴 closeAdminModal chamado");
   el("adminModal")?.classList.remove("active");
   el("modalOverlay")?.classList.remove("active");
+  console.log("✅ Admin Schedule Modal fechado");
 }
 
 // ========== BOOKING FUNCTIONS ==========
