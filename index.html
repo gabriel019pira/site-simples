@@ -269,11 +269,17 @@ function closeAllModals() {
 }
 
 function openScheduleModal() {
+  console.log("🔵 openScheduleModal chamado");
   const m = el("scheduleModal");
   const o = el("modalOverlay");
-  if (!m || !o) return;
+  console.log("Modal:", m, "Overlay:", o);
+  if (!m || !o) {
+    console.error("❌ Modal ou Overlay não encontrado!");
+    return;
+  }
   m.classList.add("active");
   o.classList.add("active");
+  console.log("✅ Modal aberto, classes adicionadas");
   const today = new Date().toISOString().split("T")[0];
   const cal = el("calendarInput");
   if (cal) {
@@ -289,11 +295,16 @@ function closeScheduleModal() {
 }
 
 function openClientLoginModal() {
+  console.log("🔵 openClientLoginModal chamado");
   const m = el("clientLoginModal");
   const o = el("modalOverlay");
+  console.log("Modal:", m, "Overlay:", o);
   if (m && o) {
     m.classList.add("active");
     o.classList.add("active");
+    console.log("✅ Modal Cliente aberto");
+  } else {
+    console.error("❌ Modal ou Overlay não encontrado!");
   }
 }
 
@@ -317,11 +328,16 @@ function closeClientSchedulesModal() {
 }
 
 function openAdminLoginModal() {
+  console.log("🔵 openAdminLoginModal chamado");
   const m = el("adminLoginModal");
   const o = el("modalOverlay");
+  console.log("Modal:", m, "Overlay:", o);
   if (m && o) {
     m.classList.add("active");
     o.classList.add("active");
+    console.log("✅ Modal Admin aberto");
+  } else {
+    console.error("❌ Modal ou Overlay não encontrado!");
   }
 }
 
@@ -556,19 +572,36 @@ async function clearAllSchedules() {
 }
 
 // ========== EVENT LISTENERS ==========
-el("sidebarToggle")?.addEventListener("click", toggleSidebar);
-el("clearCacheBtn")?.addEventListener("click", clearCache);
-el("scheduleBtn")?.addEventListener("click", openScheduleModal);
+console.log("📍 Configurando event listeners...");
+
+el("sidebarToggle")?.addEventListener("click", () => {
+  console.log("📌 Click: Sidebar Toggle");
+  toggleSidebar();
+});
+el("clearCacheBtn")?.addEventListener("click", () => {
+  console.log("📌 Click: Clear Cache");
+  clearCache();
+});
+el("scheduleBtn")?.addEventListener("click", () => {
+  console.log("📌 Click: Schedule Button");
+  openScheduleModal();
+});
 el("closeScheduleBtn")?.addEventListener("click", closeScheduleModal);
 el("confirmScheduleBtn")?.addEventListener("click", confirmSchedule);
 
-el("clientBtn")?.addEventListener("click", openClientLoginModal);
+el("clientBtn")?.addEventListener("click", () => {
+  console.log("📌 Click: Client Button");
+  openClientLoginModal();
+});
 el("closeClientLoginBtn")?.addEventListener("click", closeClientLoginModal);
 el("validateClientBtn")?.addEventListener("click", validateClientLogin);
 el("closeClientSchedulesBtn")?.addEventListener("click", closeClientSchedulesModal);
 el("logoutClientBtn")?.addEventListener("click", logoutClient);
 
-el("adminBtn")?.addEventListener("click", openAdminLoginModal);
+el("adminBtn")?.addEventListener("click", () => {
+  console.log("📌 Click: Admin Button");
+  openAdminLoginModal();
+});
 el("closeAdminLoginBtn")?.addEventListener("click", closeAdminLoginModal);
 el("validateAdminBtn")?.addEventListener("click", validateAdminLogin);
 el("closeAdminBtn")?.addEventListener("click", closeAdminModal);
