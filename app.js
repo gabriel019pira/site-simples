@@ -123,6 +123,7 @@ function openScheduleModal() {
 
 function closeScheduleModal() {
   scheduleModal.classList.remove("active");
+  modalOverlay.classList.remove("active");
 }
 
 // Funções do Modal de Login do Cliente
@@ -134,6 +135,7 @@ function openClientLoginModal() {
 
 function closeClientLoginModal() {
   clientLoginModal.classList.remove("active");
+  modalOverlay.classList.remove("active");
 }
 
 function validateClientLogin() {
@@ -159,6 +161,7 @@ function openClientSchedulesModal() {
 
 function closeClientSchedulesModal() {
   clientSchedulesModal.classList.remove("active");
+  modalOverlay.classList.remove("active");
 }
 
 function logoutClient() {
@@ -220,6 +223,7 @@ function openAdminLoginModal() {
 
 function closeAdminLoginModal() {
   adminLoginModal.classList.remove("active");
+  modalOverlay.classList.remove("active");
 }
 
 function validateAdminLogin() {
@@ -243,7 +247,7 @@ function openAdminModal() {
 
 function closeAdminModal() {
   adminModal.classList.remove("active");
-  closeAllModals();
+  modalOverlay.classList.remove("active");
 }
 
 function logoutAdmin() {
